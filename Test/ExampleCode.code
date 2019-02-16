@@ -1,0 +1,26 @@
+Robot MyRobot
+
+function main()
+    while true:
+        if MyRobot.ObstacleDetected():
+            print "Obstacle Detected"
+            MyRobot.Stop()
+        else:
+            if not MyRobot.BlobVisible(255,0,0):
+                MyRobot.SpinLeft(80)
+                Pause(300)
+                MyRobot.Stop()
+            else:
+                MyRobot.AlignWithBlob(255, 0, 0)
+                
+                if MyRobot.GetDistanceFromObstacle() < 30:
+                    MyRobot.DriveBackward()
+                else if MyRobot.GetDistanceFromObstacle() > 100:
+                    MyRobot.DriveForward()
+                else:
+                    // Do nothing
+                end
+            end
+        end
+    end
+end
