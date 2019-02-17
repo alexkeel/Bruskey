@@ -7,18 +7,29 @@ extern char *yytext;
 void yyerror(char const *);
 %}
 
-%token BUILTINTYPE IDENTIFIER KEYWORD CONSTANT OPERATOR FRACTIONALCONTANT EXPONENTPART FLOATINGSUFFIX INTEGERSUFFIX DECIMALCONSTANT OCTALCONSTANT HEXCONSTANT CHARCONSTANT STRINGLITERAL INVALID
+%token INTCONST COMMA LEFTPAREN RIGHTPAREN COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
 %start input
 
 %%
 
 input:
-BUILTINTYPE {printf(":(");}
 
+
+// Expressions
+
+
+
+constant:
+    INTCONST        {$$ = $1}
+    ;
+
+identifier :
+    IDENTIFIER      {$$ = $1}
+    ;
 %%
 
 void yyerror(char const *x)
 {
-    printf("Error %s\n", x);
+    printf("=%s\n", x);
     exit(1);
 }

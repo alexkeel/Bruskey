@@ -12,6 +12,8 @@ int charLength = 1;
 
 BuiltInType Robot
 
+BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward
+
 Keyword auto|double|int|struct|break|else|long|switch|case|enum|register|typedef|char|extern|return|union|const|float|short|unsigned|continue|for|signed|void|default|goto|sizeof|volatile|do|if|static|while
 
 Identifier [_a-zA-Z][_a-zA-Z0-9]*
@@ -42,66 +44,32 @@ All .
 
 %%
 
-{BuiltInType} {
-    return BUILTINTYPE;
-}
+[,]                 {return COMMA;}
+[(]                 {return LEFTPAREN;}
+[)]                 {return RIGHTPAREN;}
+[:]                 {return COLON;}
+[<]                 {return LESSTHAN;}
+[>]                 {return GREATERTHAN;}
+true                {return TRUE;}
+false               {return FALSE;}
 
-{Keyword} {
-    return KEYWORD;
-}
+if                  {return IF;}
+equals              {return EQUALS;}
+else                {return ELSE;}
+function            {return FUNCTIONSTATEMENT;}
+while               {return WHILE;}
+not                 {return NOT;}
 
-{Identifier} {
-    return IDENTIFIER;
-}
+{BuiltInType}       {return BUILTINTYPE;}
+{BuiltInFunction}   {return BUILTINFUNCTION;}
 
-{Operator} {
-    return OPERATOR;
-}
+{Identifier}        {return IDENTIFIER;}
 
-{FractionalConstant}{ExponentPart}?{FloatingSuffix}? {
-    return CONSTANT;
-}
+{WhiteSpace}        {;}
+{Tab}               {;}
+{All}               {;}
 
-([0-9]+){ExponentPart}{FloatingSuffix}? {
-    return CONSTANT;
-}
+({HexConstant}|{OctalConstant}|{DecimalConstant}){IntegerSuffix}?   {return INTCONST;}
 
-{HexConstant}{IntegerSuffix}? {
-    return CONSTANT;
-}
-
-{DecimalConstant}{IntegerSuffix}? {
-    return CONSTANT;
-}
-
-{OctalConstant}{IntegerSuffix}? {
-    return CONSTANT;
-}
-
-{CharConstant} {
-    return CONSTANT;
-}
-
-{StringLiteral} {
-    return STRINGLITERAL;
-}
-
-{NewLine} {
-    spaceCount = 1;
-    lineCount++;
-    sourceLineCount++;
-}
-
-{WhiteSpace} {
-    spaceCount++;
-}
-
-{Tab} {
-    spaceCount += 8;
-}
-
-{All} {
-    return INVALID;
-}
 
 %%
