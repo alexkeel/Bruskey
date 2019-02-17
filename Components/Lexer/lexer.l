@@ -44,12 +44,18 @@ All .
 
 %%
 
+[+]                 {return ADD;}
+[-]                 {return MINUS;}
+[*]                 {return MUL;}
+[/]                 {return DIV;}
+[%]                 {return MOD;}
 [,]                 {return COMMA;}
 [(]                 {return LEFTPAREN;}
 [)]                 {return RIGHTPAREN;}
 [:]                 {return COLON;}
 [<]                 {return LESSTHAN;}
 [>]                 {return GREATERTHAN;}
+[.]                 {return DOT;}
 true                {return TRUE;}
 false               {return FALSE;}
 
@@ -59,6 +65,8 @@ else                {return ELSE;}
 function            {return FUNCTIONSTATEMENT;}
 while               {return WHILE;}
 not                 {return NOT;}
+and                 {return AND;}
+or                  {return OR;}
 
 {BuiltInType}       {return BUILTINTYPE;}
 {BuiltInFunction}   {return BUILTINFUNCTION;}
