@@ -7,22 +7,38 @@ extern char *yytext;
 void yyerror(char const *);
 %}
 
-%token AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
+%token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
 %start input
 
 %%
 
 input:
-    expression    {printf("works");};   
+    expression    {}
 ;
 
 // Expressions
 expression:
-    addSubExpression         {}
+    assignmentExpression         {}
+;
+
+assignmentExpression:
+    equalityExpression {}
+|   equalityExpression EQUALS assignmentExpression {}   
+;
+
+equalityExpression:
+    notEqualsExpression                               {}
+|   notEqualsExpression EQUALITYOP equalityExpression {}    
+;
+
+notEqualsExpression:
+    multDivRemExpression                        {}
+|   NOT multDivRemExpression                    {}    
+;
 
 addSubExpression:
     multDivRemExpression                        {}
-|   addSubExpression addSubOp addSubExpression  {}
+|   multDivRemExpression addSubOp addSubExpression  {}
 ;
 
 addSubOp:
@@ -31,8 +47,8 @@ addSubOp:
 ;
 
 multDivRemExpression:
-    unaryExpression                                         {}
-|   multDivRemExpression multDivRemOp multDivRemExpression  {}
+    postfixExpression                                    {printf("umm");}
+|   primaryExpression multDivRemOp multDivRemExpression  {printf("multdiv");}
 ;
 
 multDivRemOp:
@@ -41,23 +57,11 @@ multDivRemOp:
 |   MOD {}
 ;    
 
-
-unaryExpression:
-    postfixExpression                   {}
-|   unaryOperator postfixExpression     {}    
-;
-
-unaryOperator:
-    AND     {}
-|   OR      {}
-|   NOT     {}
-;
-
 postfixExpression:
-    primaryExpression                                   {}
-|   postfixExpression LEFTPAREN postfixExpression2      {}
-|   postfixExpression DOT expression                    {}
-|   postfixExpression LEFTPAREN expression RIGHTPAREN   {}    
+    primaryExpression                                   {printf("It should always get here");}
+|   postfixExpression LEFTPAREN postfixExpression2      {printf("Argument");}
+|   postfixExpression DOT expression                    {printf("Dot expression");}
+|   postfixExpression LEFTPAREN expression RIGHTPAREN   {printf("EmptyParen");}    
 ;
 
 postfixExpression2:
@@ -67,13 +71,13 @@ postfixExpression2:
 
 argumentExpressionList:
     expression                                {}
-|   expression COMMA argumentExpressionList   {}
+|   expression COMMA argumentExpressionList   { printf("expression list");}
     ;
 
 primaryExpression:
-    identifier                             {}
-|   constant                               {}
-|   LEFTPAREN primaryExpression RIGHTPAREN {}
+    identifier                             { printf("Identifier");}
+|   constant                               { printf("Constant");}
+|   LEFTPAREN primaryExpression RIGHTPAREN { printf("Parens");}
     ;
 
 constant:
