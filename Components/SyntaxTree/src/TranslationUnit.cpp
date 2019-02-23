@@ -2,12 +2,7 @@
 
 TranslationUnit::TranslationUnit(std::vector<Statement *> statementList)
 {
-    this.statementList = statementList;
-}
-
-std::string TranslationUnit::toCode()
-{
-    this.code += """
+        this->code += R"(
         #include <stdlib.h>
         #include <initio.h>
         #include <curses.h>
@@ -31,15 +26,15 @@ std::string TranslationUnit::toCode()
 
         void camcar(int argc, char *argv[], struct thread_dat *ptdat) 
         {
-    """;
+    )";
 
-    for(int x = 0; x < statementList.size; x++)
+    for(int x = 0; x < statementList.size(); x++)
     {
-        code += statementList.get(x)->toCode();
+        code += statementList.at(x)->toCode();
     }
 
-    this.code += """
-    
+    this->code += R"(
+
         void *worker(void *p_thread_dat)
         {
             struct thread_dat *ptdat = (struct thread_dat *) p_thread_dat;
@@ -103,9 +98,10 @@ std::string TranslationUnit::toCode()
             initio_Cleanup ();  // initio: cleanup the library (reset robot car)
             endwin();           // curses: cleanup the library
             return EXIT_SUCCESS;
-        }
+        })";
+}
 
-    """
-    
-    return this.code;
+std::string TranslationUnit::toCode() const
+{
+    return this->code;
 }

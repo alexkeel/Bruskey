@@ -1,3 +1,6 @@
+#ifndef EXPRESSION_H
+#define EXPRESSION_H
+
 #include <iostream>
 #include <string>
 #include "Node.hpp"
@@ -10,4 +13,6 @@ public:
 
 protected:
     std::string expression;
-}
+};
+
+#endif

@@ -1,5 +1,13 @@
 %option noyywrap
 %{
+#include "stdio.h"    
+#include "stdlib.h"
+#include "Node.hpp"
+#include "TranslationUnit.hpp"
+#include "Statement.hpp"
+#include "Integer.hpp"
+#include "Identifier.hpp"
+#include <string>
 #include "parser.tab.hpp"
 
 int lineCount = 1;

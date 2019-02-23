@@ -10,3 +10,5 @@ ADD_FLEX_BISON_DEPENDENCY(Lexer Parser)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(Compiler main.cpp ${BISON_Parser_OUTPUTS} ${FLEX_Lexer_OUTPUTS})
+
+target_link_libraries(Compiler SyntaxTree)

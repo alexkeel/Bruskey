@@ -1,3 +1,6 @@
+#ifndef INTEGER_H
+#define INTEGER_H
+
 #include "Node.hpp"
 #include "string"
 
@@ -5,10 +8,13 @@
 class Integer : public Node
 {
 public:
-    Integer(std::string value);
+    Integer(std::string* value);
+    ~Integer();
 
-    virtual std::string toCode(){return value;}
+    virtual std::string toCode() const {return value;}
 
 private:
     std::string value;
-}
+};
+
+#endif

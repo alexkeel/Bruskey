@@ -1,3 +1,6 @@
+#ifndef NODE_H
+#define NODE_H
+
 #include <iostream>
 #include <vector>
 
@@ -12,4 +15,6 @@ public:
 
 private:
     std::vector<Node *> children;
-}
+};
+
+#endif

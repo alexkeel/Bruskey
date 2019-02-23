@@ -1,3 +1,6 @@
+#ifndef STATEMENT_H
+#define STATEMENT_H
+
 #include "Node.hpp"
 #include "Expression.hpp"
 
@@ -14,4 +17,6 @@ public:
 
 private:
     std::vector<Statement *> statementList;
-}
+};
+
+#endif
