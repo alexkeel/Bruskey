@@ -44,8 +44,8 @@ All .
 
 [+]                 {return ADD;}
 [-]                 {return MINUS;}
-[\*]                 {return MUL;}
-[\/]                 {return DIV;}
+[\*]                {return MUL;}
+[\/]                {return DIV;}
 [%]                 {return MOD;}
 [,]                 {return COMMA;}
 [(]                 {return LEFTPAREN;}

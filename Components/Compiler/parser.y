@@ -1,9 +1,13 @@
 %{
 #include "stdio.h"    
 #include "stdlib.h"
+#include "TranslationUnit.hpp"
+#include "Statement"
 
 int yylex(void);
 extern char *yytext;
+TranslationUnit *base;
+std::vector<Statement *> statementList;
 void yyerror(char const *);
 %}
 
@@ -13,8 +17,14 @@ void yyerror(char const *);
 %%
 
 input:
-    expression    {}
+    statementList {base = new TranslationUnit(statementList)}
 ;
+
+statementList:
+    statement               {statementList.push_back($1);}
+|   statementList statement {statementList.push_back($2);}    
+
+// Statements
 
 // Expressions
 expression:
