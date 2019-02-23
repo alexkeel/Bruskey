@@ -12,8 +12,8 @@ public:
     ~Identifier();
     
 private:
-    virtual std::string toCode() const {return value;}
-    std::string value;
+    virtual std::string toCode() const {return *value;}
+    std::string *value;
 };
 
 #endif

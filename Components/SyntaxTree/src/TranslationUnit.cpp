@@ -1,4 +1,5 @@
 #include "TranslationUnit.hpp"
+#include <iostream>
 
 TranslationUnit::TranslationUnit(std::vector<Statement *> statementList)
 {
@@ -30,7 +31,7 @@ TranslationUnit::TranslationUnit(std::vector<Statement *> statementList)
 
     for(int x = 0; x < statementList.size(); x++)
     {
-        code += statementList.at(x)->toCode();
+        //code += statementList.at(x)->toCode();
     }
 
     this->code += R"(

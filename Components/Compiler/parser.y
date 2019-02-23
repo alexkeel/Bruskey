@@ -71,13 +71,13 @@ equalityExpression:
 ;
 
 notEqualsExpression:
-    multDivRemExpression                        {}
+    addSubExpression                            {}
 |   NOT multDivRemExpression                    {}    
 ;
 
 addSubExpression:
-    multDivRemExpression                        {}
-|   multDivRemExpression addSubOp addSubExpression  {}
+    multDivRemExpression                             {}
+|   multDivRemExpression addSubOp addSubExpression   {}
 ;
 
 addSubOp:
@@ -86,8 +86,8 @@ addSubOp:
 ;
 
 multDivRemExpression:
-    postfixExpression                                    {printf("umm");}
-|   primaryExpression multDivRemOp multDivRemExpression  {printf("multdiv");}
+    postfixExpression                                    {}
+|   primaryExpression multDivRemOp multDivRemExpression  {}
 ;
 
 multDivRemOp:
@@ -97,10 +97,10 @@ multDivRemOp:
 ;    
 
 postfixExpression:
-    primaryExpression                                   {printf("It should always get here");}
-|   postfixExpression LEFTPAREN postfixExpression2      {printf("Argument");}
-|   postfixExpression DOT expression                    {printf("Dot expression");}
-|   postfixExpression LEFTPAREN expression RIGHTPAREN   {printf("EmptyParen");}    
+    primaryExpression                                   {}
+|   postfixExpression LEFTPAREN postfixExpression2      {}
+|   postfixExpression DOT expression                    {}
+|   postfixExpression LEFTPAREN expression RIGHTPAREN   {}    
 ;
 
 postfixExpression2:
@@ -110,13 +110,13 @@ postfixExpression2:
 
 argumentExpressionList:
     expression                                {}
-|   expression COMMA argumentExpressionList   { printf("expression list");}
+|   expression COMMA argumentExpressionList   {}
     ;
 
 primaryExpression:
-    identifier                             { printf("Identifier");}
-|   constant                               { printf("Constant");}
-|   LEFTPAREN primaryExpression RIGHTPAREN { printf("Parens");}
+    identifier                             {}
+|   constant                               {}
+|   LEFTPAREN primaryExpression RIGHTPAREN {}
     ;
 
 constant:
