@@ -13,6 +13,7 @@
 #include "ArithmaticExpression.hpp"
 #include "IfStatement.hpp"
 #include "WhileStatement.hpp"
+#include "StatementList.hpp"
 #include <string>
 #include "parser.tab.hpp"
 

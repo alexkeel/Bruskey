@@ -1,17 +1,20 @@
 #include "IfStatement.hpp"
+#include <iostream>
 
-IfStatement::IfStatement(Expression *condition, std::vector<Statement *> *statements)
+IfStatement::IfStatement(Expression *condition, StatementList *statements)
 {
     this->condition = condition->toCode();
     if(statements != nullptr)
     {
-        this->statementList = *statements;    
-    }    
+        this->statementList = statements->getStatements();    
+    }
+    std::cout << "if";
 }
 
 IfStatement::IfStatement(Expression *condition)
 {
     this->condition = condition->toCode();
+    std::cout << "if";
 }
  
 IfStatement::~IfStatement()
@@ -29,6 +32,5 @@ std::string IfStatement::toCode() const
         retVal += statementList.at(i)->toCode();
     }
     retVal += "\n    }";
-
     return retVal;  
 }

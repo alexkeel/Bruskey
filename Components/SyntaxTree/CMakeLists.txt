@@ -8,6 +8,7 @@ set(SOURCE_FILES src/Expression.cpp
                  src/NotEqualsExpression.cpp
                  src/IfStatement.cpp
                  src/WhileStatement.cpp
+                 src/StatementList.cpp
  )
 
 add_library(SyntaxTree ${SOURCE_FILES})

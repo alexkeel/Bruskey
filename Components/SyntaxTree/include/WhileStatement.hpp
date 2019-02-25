@@ -1,12 +1,15 @@
+#ifndef WHILESTATEMENT_H
+#define WHILESTATEMENT_H
+
 #include <Statement.hpp>
 #include <string>
-#include <vector>
 #include "Node.hpp"
+#include "StatementList.hpp"
 
 class WhileStatement : public Statement
 {
 public:
-    WhileStatement(Expression *condition, std::vector<Statement *> *statements);
+    WhileStatement(Expression *condition, StatementList *statements);
     WhileStatement(Expression *condition);
     ~WhileStatement();
 
@@ -15,3 +18,4 @@ private:
     std::string condition;
 };
 
+#endif

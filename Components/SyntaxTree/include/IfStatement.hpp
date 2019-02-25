@@ -1,12 +1,15 @@
+#ifndef IFSTATEMENT_H
+#define IFSTATEMENT_H
+
 #include <Statement.hpp>
 #include <string>
-#include <vector>
 #include "Node.hpp"
+#include "StatementList.hpp"
 
 class IfStatement : public Statement
 {
 public:
-    IfStatement(Expression *condition, std::vector<Statement *> *statements);
+    IfStatement(Expression *condition, StatementList *statements);
     IfStatement(Expression *condition);
     ~IfStatement();
 
@@ -15,3 +18,4 @@ private:
     std::string condition;
 };
 
+#endif

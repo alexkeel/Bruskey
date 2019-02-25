@@ -1,3 +1,6 @@
+#ifndef NOTEQUALSEXPRESSION_H
+#define NOTEQUALSEXPRESSION_H
+
 #include "Expression.hpp"
 #include <string>
 
@@ -11,3 +14,5 @@ public:
     virtual std::string toCode() const;
 
 };
+
+#endif

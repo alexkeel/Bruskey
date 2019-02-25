@@ -12,13 +12,13 @@
 #include "NotEqualsExpression.hpp"
 #include "IfStatement.hpp"
 #include "WhileStatement.hpp"
+#include "StatementList.hpp"
 #include <string>
 #include <vector>
 
 int yylex(void);
 extern char *yytext;
 TranslationUnit *base;
-std::vector<Statement *> statementList;
 void yyerror(char const *);
 %}
 
@@ -35,7 +35,7 @@ void yyerror(char const *);
     WhileStatement *whileStmt;
     const std::string *string;
     std::vector<Expression *> *exprList;
-    std::vector<Statement *> *stmtList;
+    StatementList *stmtList;
 }
 
 %token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
@@ -58,12 +58,12 @@ void yyerror(char const *);
 %%
 
 input:
-    statementList                                                           {base = new TranslationUnit(statementList);}
+    statementList                                                           {base = new TranslationUnit($1);}
 ;
 
 statementList:
-    statement                                                               {statementList.push_back($1);}
-|   statementList statement                                                 {statementList.push_back($2);}    
+    statement                                                               {$$ = new StatementList(); $$->addStatement($1);}
+|   statementList statement                                                 {$$->addStatement($2);}    
 ;
 
 // Statements

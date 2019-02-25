@@ -1,8 +1,10 @@
 #include "TranslationUnit.hpp"
 #include <iostream>
 
-TranslationUnit::TranslationUnit(std::vector<Statement *> statementList)
+TranslationUnit::TranslationUnit(StatementList *statementList)
 {
+    this->statementList = statementList->getStatements();
+
         this->code += R"(
 #include <stdlib.h>
 #include <initio.h>
@@ -28,12 +30,12 @@ pthread_mutex_t count_mutex;
 void camcar(int argc, char *argv[], struct thread_dat *ptdat) 
 {
 )";
+std::cout << "translation unit";
 
-    for(int x = 0; x < statementList.size(); x++)
+    for(int x = 0; x < this->statementList.size(); x++)
     {
-        code += statementList.at(x)->toCode();
-    }
-
+        code += this->statementList.at(x)->toCode();
+    }   
     this->code += R"(
 }
 
@@ -101,6 +103,7 @@ int main (int argc, char *argv[])
     endwin();           // curses: cleanup the library
     return EXIT_SUCCESS;
 })";
+
 }
 
 std::string TranslationUnit::toCode() const

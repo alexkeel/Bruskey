@@ -1,12 +1,15 @@
 #include "WhileStatement.hpp"
+#include <iostream>
 
-WhileStatement::WhileStatement(Expression *condition, std::vector<Statement *> *statements)
+WhileStatement::WhileStatement(Expression *condition, StatementList *statements)
 {
     this->condition = condition->toCode();
+
     if(statements != nullptr)
     {
-        this->statementList = *statements;    
-    }    
+        this->statementList = statements->getStatements();      
+    }
+    std::cout << "while";
 }
 
 WhileStatement::WhileStatement(Expression *condition)
@@ -26,9 +29,8 @@ std::string WhileStatement::toCode() const
     retVal = "    while(" + this->condition + ")\n    {\n";
     for(int i = 0; i < this->statementList.size(); i++)
     {
-        retVal += statementList.at(i)->toCode();
+        retVal += this->statementList.at(i)->toCode();
     }
     retVal += "\n    }";
-
     return retVal;  
 }

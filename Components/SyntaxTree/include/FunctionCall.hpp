@@ -1,3 +1,6 @@
+#ifndef FUNCTIONCALL_H
+#define FUNCTIONCALL_H
+
 #include <string>
 #include <Expression.hpp>
 #include <vector>
@@ -15,3 +18,5 @@ public:
 private:
     virtual std::string toCode() const;
 };
+
+#endif

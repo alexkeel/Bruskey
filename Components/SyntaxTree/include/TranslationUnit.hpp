@@ -4,6 +4,7 @@
 #include "Node.hpp"
 #include "Expression.hpp"
 #include "Statement.hpp"
+#include "StatementList.hpp"
 
 #include <string>
 #include <vector>
@@ -11,7 +12,7 @@
 class TranslationUnit : public Node
 {
 public:
-    TranslationUnit(std::vector<Statement *> statementList);
+    TranslationUnit(StatementList *statementList);
     ~TranslationUnit(){};
 
     virtual std::string toCode() const;
