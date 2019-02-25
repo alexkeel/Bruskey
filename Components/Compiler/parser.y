@@ -6,7 +6,13 @@
 #include "Statement.hpp"
 #include "Integer.hpp"
 #include "Identifier.hpp"
+#include "FunctionCall.hpp"
+#include "Expression.hpp"
+#include "ArithmaticExpression.hpp"
+#include "NotEqualsExpression.hpp"
+#include "IfStatement.hpp"
 #include <string>
+#include <vector>
 
 int yylex(void);
 extern char *yytext;
@@ -20,111 +26,128 @@ void yyerror(char const *);
     Node *node;
     TranslationUnit *tUnit;
     Statement *stmt;
-    Expression *expression;
+    Expression *expr;
     Integer *integer;
     Identifier *ident;
-    std::string *string;
+    ArithmaticExpression *arithmaticExpression;
+    IfStatement *ifStmt;
+    const std::string *string;
+    std::vector<Expression*> *exprList;
 }
 
 %token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
 
 // Terminals
-%type <string> IDENTIFIER INTCONST
+%type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS 
 
 // Non terminals
-%type <stmt> statement
-%type <integer> constant 
-%type <ident>  identifier
+%type <stmt>      statement 
+%type <integer>   constant 
+%type <ident>     identifier multDivRemOp addSubOp eqalityOp equalsOp
+%type <expr>      primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression
+%type <exprList>  argumentExpressionList postfixExpression2 
+%type <ifStmt>    ifStatement;
 
 %start input
 
 %%
 
 input:
-    statementList {base = new TranslationUnit(statementList);}
+    statementList                                                           {base = new TranslationUnit(statementList);}
 ;
 
 statementList:
-    statement               {statementList.push_back($1);}
-|   statementList statement {statementList.push_back($2);}    
+    statement                                                               {statementList.push_back($1);}
+|   statementList statement                                                 {statementList.push_back($2);}    
 ;
 
 // Statements
 
 statement:
-    expression {}
+    ifStatement                                                             {$$ = $1;}
+;
+
+ifStatement:
+    IF expression COLON                                                     {$$ = new IfStatement($2);}
 ;
 
 // Expressions
 expression:
-    assignmentExpression         {}
+    assignmentExpression                                                    {$$ = $1;}
 ;
 
 assignmentExpression:
-    equalityExpression {}
-|   equalityExpression EQUALS assignmentExpression {}   
+    equalityExpression                                                      {$$ = $1;}
+|   equalityExpression equalsOp assignmentExpression                        {$$ = new ArithmaticExpression($1, $2, $3);}   
 ;
 
+equalsOp:
+    EQUALS                                                                  {$$ = new Identifier(yytext);}
+    ;
+
 equalityExpression:
-    notEqualsExpression                               {}
-|   notEqualsExpression EQUALITYOP equalityExpression {}    
+    notEqualsExpression                                                     {$$ = $1;}
+|   equalityExpression eqalityOp equalityExpression                         {$$ = new ArithmaticExpression($1, $2, $3);}    
+;
+
+eqalityOp:
+    EQUALITYOP                                                              {$$ = new Identifier(yytext);}
 ;
 
 notEqualsExpression:
-    addSubExpression                            {}
-|   NOT multDivRemExpression                    {}    
+    addSubExpression                                                        {$$ = $1;}
+|   NOT multDivRemExpression                                                {$$ = new NotEqualsExpression($2);}    
 ;
 
 addSubExpression:
-    multDivRemExpression                             {}
-|   multDivRemExpression addSubOp addSubExpression   {}
+    multDivRemExpression                                                    {$$ = $1;}
+|   multDivRemExpression addSubOp addSubExpression                          {$$ = new ArithmaticExpression($1, $2, $3);}
 ;
 
 addSubOp:
-    ADD {}
-|   SUB {}
+    ADD                                                                     {$$ = new Identifier(yytext);}
+|   SUB                                                                     {$$ = new Identifier(yytext);}
 ;
 
 multDivRemExpression:
-    postfixExpression                                    {}
-|   primaryExpression multDivRemOp multDivRemExpression  {}
+    postfixExpression                                                       {$$ = $1;}
+|   primaryExpression multDivRemOp multDivRemExpression                     {$$ = new ArithmaticExpression($1, $2, $3);}
 ;
 
 multDivRemOp:
-    MUL {}
-|   DIV {}
-|   MOD {}
+    MUL                                                                     {$$ = new Identifier(yytext);}
+|   DIV                                                                     {$$ = new Identifier(yytext);}
+|   MOD                                                                     {$$ = new Identifier(yytext);}
 ;    
 
 postfixExpression:
-    primaryExpression                                   {}
-|   postfixExpression LEFTPAREN postfixExpression2      {}
-|   postfixExpression DOT expression                    {}
-|   postfixExpression LEFTPAREN expression RIGHTPAREN   {}    
+    primaryExpression                                                       {$$ = $1;}
+|   postfixExpression LEFTPAREN postfixExpression2                          {$$ = new FunctionCall($1, $3);}                            
+|   postfixExpression LEFTPAREN expression RIGHTPAREN                       {$$ = new FunctionCall($1, $3);}    
 ;
 
 postfixExpression2:
-    RIGHTPAREN                          {}
-|   argumentExpressionList RIGHTPAREN   {}
-    ;
+    RIGHTPAREN                                                              {$$ = new std::vector<Expression *>();}
+|   argumentExpressionList RIGHTPAREN                                       {$$ = $1;}
+;
 
 argumentExpressionList:
-    expression                                {}
-|   expression COMMA argumentExpressionList   {}
+    expression                                                              {$$ = new std::vector<Expression *>();}
+|   argumentExpressionList COMMA expression                                 {$$->push_back($3);}
     ;
 
 primaryExpression:
-    identifier                             {}
-|   constant                               {}
-|   LEFTPAREN primaryExpression RIGHTPAREN {}
+    identifier                                                              {$$ = $1;}
+|   constant                                                                {$$ = $1;}
+|   LEFTPAREN primaryExpression RIGHTPAREN                                  {$$ = $2;;}
     ;
 
 constant:
-    INTCONST        {$$ = new Integer($1);}
+    INTCONST                                                                {$$ = new Integer(yytext);}
     ;
 
 identifier:
-    IDENTIFIER      {$$ = new Identifier($1);}
+    IDENTIFIER                                                              {$$ = new Identifier(yytext);}
     ;
 %%
 

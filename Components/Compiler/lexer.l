@@ -4,9 +4,14 @@
 #include "stdlib.h"
 #include "Node.hpp"
 #include "TranslationUnit.hpp"
+#include "NotEqualsExpression.hpp"
 #include "Statement.hpp"
 #include "Integer.hpp"
 #include "Identifier.hpp"
+#include "FunctionCall.hpp"
+#include "Expression.hpp"
+#include "ArithmaticExpression.hpp"
+#include "IfStatement.hpp"
 #include <string>
 #include "parser.tab.hpp"
 
@@ -74,6 +79,8 @@ while               {return WHILE;}
 not                 {return NOT;}
 and                 {return AND;}
 or                  {return OR;}
+
+\/\/.+              {}
 
 {BuiltInType}       {return BUILTINTYPE;}
 {BuiltInFunction}   {return BUILTINFUNCTION;}

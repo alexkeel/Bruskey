@@ -8,7 +8,7 @@
 class ArithmaticExpression : public Expression
 {
 public:
-    ArithmaticExpression(Expression *lhs, std::string op, Expression *rhs);
+    ArithmaticExpression(Expression *lhs, Expression *op, Expression *rhs);
 };
 
 #endif

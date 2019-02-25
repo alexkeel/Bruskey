@@ -1,9 +1,9 @@
 #include "Identifier.hpp"
 #include <iostream>
 
-Identifier::Identifier(std::string *value)
+Identifier::Identifier(const std::string &value) 
 {
-    this->value = value;
+    expression = value;
 }
 
 Identifier::~Identifier()

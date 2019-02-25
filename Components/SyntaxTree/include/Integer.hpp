@@ -1,20 +1,20 @@
 #ifndef INTEGER_H
 #define INTEGER_H
 
-#include "Node.hpp"
+#include "Expression.hpp"
 #include <string>
 
 // Stores values identified as integers as a string value
-class Integer : public Node
+class Integer : public Expression
 {
 public:
-    Integer(std::string* value);
+    Integer(const std::string &value);
     ~Integer();
 
-    virtual std::string toCode() const {return *value;}
+    virtual std::string toCode() const {return this->expression;}
 
 private:
-    std::string *value;
+
 };
 
 #endif

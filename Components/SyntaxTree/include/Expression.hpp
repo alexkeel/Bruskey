@@ -9,7 +9,10 @@ class Expression : public Node
 {
 
 public:
-    virtual std::string toCode(){return expression;}
+    Expression();
+    Expression(Expression *expression);
+
+    virtual std::string toCode() const {return expression;}
 
 protected:
     std::string expression;

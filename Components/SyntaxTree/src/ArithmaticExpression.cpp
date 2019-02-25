@@ -1,6 +1,9 @@
 #include "ArithmaticExpression.hpp"
 
-ArithmaticExpression::ArithmaticExpression(Expression *lhs, std::string op, Expression *rhs)
+ArithmaticExpression::ArithmaticExpression(Expression *lhs, Expression *op, Expression *rhs)
 {
-    expression = lhs->toCode() + op + rhs->toCode();
+    if(op != nullptr)
+    {
+        expression = lhs->toCode() + op->toCode() + rhs->toCode();
+    }    
 }

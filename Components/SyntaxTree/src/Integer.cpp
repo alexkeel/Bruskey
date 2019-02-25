@@ -1,8 +1,8 @@
 #include "Integer.hpp"
 
-Integer::Integer(std::string *value)
+Integer::Integer(const std::string &value)
 {    
-    this->value = value;
+    this->expression = value;  
 }
 
 Integer::~Integer()
