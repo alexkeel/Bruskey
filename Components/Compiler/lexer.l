@@ -12,6 +12,7 @@
 #include "Expression.hpp"
 #include "ArithmaticExpression.hpp"
 #include "IfStatement.hpp"
+#include "WhileStatement.hpp"
 #include <string>
 #include "parser.tab.hpp"
 
@@ -79,6 +80,7 @@ while               {return WHILE;}
 not                 {return NOT;}
 and                 {return AND;}
 or                  {return OR;}
+end                 {return END;}
 
 \/\/.+              {}
 

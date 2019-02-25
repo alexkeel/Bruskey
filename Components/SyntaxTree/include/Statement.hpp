@@ -15,7 +15,7 @@ public:
 
     virtual std::string toCode() const = 0;
 
-private:
+protected:
     std::vector<Statement *> statementList;
 };
 

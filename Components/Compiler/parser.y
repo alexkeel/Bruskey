@@ -11,6 +11,7 @@
 #include "ArithmaticExpression.hpp"
 #include "NotEqualsExpression.hpp"
 #include "IfStatement.hpp"
+#include "WhileStatement.hpp"
 #include <string>
 #include <vector>
 
@@ -31,11 +32,13 @@ void yyerror(char const *);
     Identifier *ident;
     ArithmaticExpression *arithmaticExpression;
     IfStatement *ifStmt;
+    WhileStatement *whileStmt;
     const std::string *string;
-    std::vector<Expression*> *exprList;
+    std::vector<Expression *> *exprList;
+    std::vector<Statement *> *stmtList;
 }
 
-%token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
+%token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
 
 // Terminals
 %type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS 
@@ -47,6 +50,8 @@ void yyerror(char const *);
 %type <expr>      primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression
 %type <exprList>  argumentExpressionList postfixExpression2 
 %type <ifStmt>    ifStatement;
+%type <whileStmt> whileStatement;
+%type <stmtList>  statementList;
 
 %start input
 
@@ -65,10 +70,17 @@ statementList:
 
 statement:
     ifStatement                                                             {$$ = $1;}
+|   whileStatement                                                          {$$ = $1;}
 ;
 
 ifStatement:
-    IF expression COLON                                                     {$$ = new IfStatement($2);}
+    IF expression COLON END                                                 {$$ = new IfStatement($2);}
+|   IF expression COLON statementList END                                   {$$ = new IfStatement($2, $4);}
+;
+
+whileStatement:
+    WHILE expression COLON END                                              {$$ = new WhileStatement($2);}
+|   WHILE expression COLON statementList END                                {$$ = new WhileStatement($2, $4);}
 ;
 
 // Expressions
@@ -134,21 +146,23 @@ postfixExpression2:
 argumentExpressionList:
     expression                                                              {$$ = new std::vector<Expression *>();}
 |   argumentExpressionList COMMA expression                                 {$$->push_back($3);}
-    ;
+;
 
 primaryExpression:
     identifier                                                              {$$ = $1;}
 |   constant                                                                {$$ = $1;}
-|   LEFTPAREN primaryExpression RIGHTPAREN                                  {$$ = $2;;}
-    ;
+|   LEFTPAREN primaryExpression RIGHTPAREN                                  {$$ = $2;}
+;
 
 constant:
     INTCONST                                                                {$$ = new Integer(yytext);}
-    ;
+|   TRUE                                                                    {$$ = new Integer(yytext);}
+|   FALSE                                                                   {$$ = new Integer(yytext);}
+;
 
 identifier:
     IDENTIFIER                                                              {$$ = new Identifier(yytext);}
-    ;
+;
 %%
 
 void yyerror(char const *x)

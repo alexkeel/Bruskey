@@ -1,6 +1,6 @@
-#include "IfStatement.hpp"
+#include "WhileStatement.hpp"
 
-IfStatement::IfStatement(Expression *condition, std::vector<Statement *> *statements)
+WhileStatement::WhileStatement(Expression *condition, std::vector<Statement *> *statements)
 {
     this->condition = condition->toCode();
     if(statements != nullptr)
@@ -9,21 +9,21 @@ IfStatement::IfStatement(Expression *condition, std::vector<Statement *> *statem
     }    
 }
 
-IfStatement::IfStatement(Expression *condition)
+WhileStatement::WhileStatement(Expression *condition)
 {
     this->condition = condition->toCode();
 }
  
-IfStatement::~IfStatement()
+WhileStatement::~WhileStatement()
 {
 
 }
 
 
-std::string IfStatement::toCode() const
+std::string WhileStatement::toCode() const
 {
     std::string retVal;
-    retVal = "    if(" + this->condition + ")\n    {\n";
+    retVal = "    while(" + this->condition + ")\n    {\n";
     for(int i = 0; i < this->statementList.size(); i++)
     {
         retVal += statementList.at(i)->toCode();
