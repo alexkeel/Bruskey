@@ -10,9 +10,11 @@ class Identifier : public Expression
 public:    
     Identifier(const std::string &value);
     ~Identifier();
+
+    virtual std::string toCode() const {return this->expression;}
     
 private:
-    virtual std::string toCode() const {return this->expression;}
+    
 };
 
 #endif

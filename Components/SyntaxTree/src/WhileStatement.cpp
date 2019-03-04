@@ -1,4 +1,5 @@
 #include "WhileStatement.hpp"
+#include "Common.hpp"
 #include <iostream>
 
 WhileStatement::WhileStatement(Expression *condition, StatementList *statements)
@@ -9,7 +10,6 @@ WhileStatement::WhileStatement(Expression *condition, StatementList *statements)
     {
         this->statementList = statements->getStatements();      
     }
-    std::cout << "while";
 }
 
 WhileStatement::WhileStatement(Expression *condition)
@@ -26,10 +26,12 @@ WhileStatement::~WhileStatement()
 std::string WhileStatement::toCode() const
 {
     std::string retVal;
-    retVal = "    while(" + this->condition + ")\n    {\n";
+    retVal = "    while(" + this->condition + ")\n    {";
     for(int i = 0; i < this->statementList.size(); i++)
     {
-        retVal += this->statementList.at(i)->toCode();
+        std::string tempStr = this->statementList.at(i)->toCode();
+        tempStr = Common::indentString(tempStr);
+        retVal += tempStr;
     }
     retVal += "\n    }";
     return retVal;  

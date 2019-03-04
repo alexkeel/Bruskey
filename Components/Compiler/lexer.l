@@ -14,6 +14,7 @@
 #include "IfStatement.hpp"
 #include "WhileStatement.hpp"
 #include "StatementList.hpp"
+#include "BuiltInFunction.hpp"
 #include <string>
 #include "parser.tab.hpp"
 

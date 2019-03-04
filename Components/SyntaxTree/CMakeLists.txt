@@ -9,6 +9,8 @@ set(SOURCE_FILES src/Expression.cpp
                  src/IfStatement.cpp
                  src/WhileStatement.cpp
                  src/StatementList.cpp
+                 src/BuiltInFunction.cpp
+                 src/Common.cpp
  )
 
 add_library(SyntaxTree ${SOURCE_FILES})

@@ -13,6 +13,7 @@
 #include "IfStatement.hpp"
 #include "WhileStatement.hpp"
 #include "StatementList.hpp"
+#include "BuiltInFunction.hpp"
 #include <string>
 #include <vector>
 
@@ -36,6 +37,7 @@ void yyerror(char const *);
     const std::string *string;
     std::vector<Expression *> *exprList;
     StatementList *stmtList;
+    BuiltInFunction *builtInFunc;
 }
 
 %token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
@@ -44,14 +46,15 @@ void yyerror(char const *);
 %type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS 
 
 // Non terminals
-%type <stmt>      statement 
-%type <integer>   constant 
-%type <ident>     identifier multDivRemOp addSubOp eqalityOp equalsOp
-%type <expr>      primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression
-%type <exprList>  argumentExpressionList postfixExpression2 
-%type <ifStmt>    ifStatement;
-%type <whileStmt> whileStatement;
-%type <stmtList>  statementList;
+%type <stmt>        statement 
+%type <integer>     constant 
+%type <ident>       identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction
+%type <expr>        primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression
+%type <exprList>    argumentExpressionList postfixExpression2 
+%type <ifStmt>      ifStatement;
+%type <whileStmt>   whileStatement;
+%type <stmtList>    statementList;
+%type <builtInFunc> builtInFunctionCall;
 
 %start input
 
@@ -85,7 +88,21 @@ whileStatement:
 
 // Expressions
 expression:
-    assignmentExpression                                                    {$$ = $1;}
+    builtInFunctionCall                                                     {$$ = $1;}    
+|   assignmentExpression                                                    {$$ = $1;}
+;
+
+builtInFunctionCall:
+    builtInType DOT builtInFunction LEFTPAREN RIGHTPAREN                    {$$ = new BuiltInFunction($3);} 
+|   builtInType DOT builtInFunction argumentExpressionList                  {$$ = new BuiltInFunction($3, $4);}
+;
+
+builtInType:
+    BUILTINTYPE                                                             {$$ = new Identifier(yytext);}
+;
+
+builtInFunction:
+    BUILTINFUNCTION                                                         {$$ = new Identifier(yytext);}
 ;
 
 assignmentExpression:
@@ -95,7 +112,7 @@ assignmentExpression:
 
 equalsOp:
     EQUALS                                                                  {$$ = new Identifier(yytext);}
-    ;
+;
 
 equalityExpression:
     notEqualsExpression                                                     {$$ = $1;}

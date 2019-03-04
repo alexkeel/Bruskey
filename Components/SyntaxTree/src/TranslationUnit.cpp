@@ -14,7 +14,7 @@ TranslationUnit::TranslationUnit(StatementList *statementList)
 #include <pwd.h>
 #include <pthread.h>
 #include <assert.h>
-#include \"detect_blob.h\"
+#include "detect_blob.h"
 
 #define DIST_MIN 60
 #define DIST_MAX 100
@@ -25,18 +25,17 @@ struct thread_dat {
     int bExit; 		
 };
 
+int speed;
+
 pthread_mutex_t count_mutex; 
 
-void camcar(int argc, char *argv[], struct thread_dat *ptdat) 
+bool blobDetected()
 {
-)";
-std::cout << "translation unit";
+    pthread_mutex_lock(&count_mutex);
+    blob = ptdat->blob;
+    pthread_mutex_unlock(&count_mutex);
 
-    for(int x = 0; x < this->statementList.size(); x++)
-    {
-        code += this->statementList.at(x)->toCode();
-    }   
-    this->code += R"(
+    blobSufficient = (blob.size > 20);  
 }
 
 void *worker(void *p_thread_dat)
@@ -61,6 +60,24 @@ void *worker(void *p_thread_dat)
     } // while
 
     return NULL;
+}
+
+void camcar(int argc, char *argv[], struct thread_dat *ptdat) 
+{
+    int obstacle_L, obstacle_R, obstacle; 
+    int blobSufficient; 
+    int carBlobAligned; 
+    int distance;
+    speed = 50;
+
+)";
+std::cout << "translation unit";
+
+    for(int x = 0; x < this->statementList.size(); x++)
+    {
+        code += this->statementList.at(x)->toCode();
+    }   
+    this->code += R"(
 }
 
 int main (int argc, char *argv[])
