@@ -68,11 +68,9 @@ void camcar(int argc, char *argv[], struct thread_dat *ptdat)
     int blobSufficient; 
     int carBlobAligned; 
     int distance;
-    speed = 50;
+    int speed = 50;
 
 )";
-std::cout << "translation unit";
-
     for(int x = 0; x < this->statementList.size(); x++)
     {
         code += this->statementList.at(x)->toCode();

@@ -1,6 +1,5 @@
 #include "IfStatement.hpp"
 #include <iostream>
-#include "Common.hpp"
 
 IfStatement::IfStatement(Expression *condition, StatementList *statements)
 {
@@ -25,13 +24,12 @@ IfStatement::~IfStatement()
 std::string IfStatement::toCode() const
 {
     std::string retVal;
-    retVal = "    if(" + this->condition + ")\n    {";
+    retVal = "if(" + this->condition + ")\n{";
     for(int i = 0; i < this->statementList.size(); i++)
     {
         std::string tempStr = this->statementList.at(i)->toCode();
-        tempStr = Common::indentString(tempStr);
         retVal += tempStr;
     }
-    retVal += "\n    }";
+    retVal += "\n}";
     return retVal;  
 }
