@@ -5,6 +5,7 @@
 #include <string>
 #include "Node.hpp"
 #include "StatementList.hpp"
+#include "ElseIfStatement.hpp"
 
 class IfStatement : public Statement
 {
@@ -13,9 +14,13 @@ public:
     IfStatement(Expression *condition);
     ~IfStatement();
 
-private:
+    void addElseIfClause(ElseIfStatement *clause);
+
     virtual std::string toCode() const; 
+
+private:
     std::string condition;
+    std::vector<ElseIfStatement *> elseIfClauses;
 };
 
 #endif

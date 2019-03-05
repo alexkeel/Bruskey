@@ -14,6 +14,8 @@
 #include "WhileStatement.hpp"
 #include "StatementList.hpp"
 #include "BuiltInFunction.hpp"
+#include "ElseStatement.hpp"
+#include "ElseIfStatement.hpp"
 #include <string>
 #include <vector>
 
@@ -36,8 +38,11 @@ void yyerror(char const *);
     WhileStatement *whileStmt;
     const std::string *string;
     std::vector<Expression *> *exprList;
+    std::vector<ElseIfStatement *> *elseIfStmtList;
     StatementList *stmtList;
     BuiltInFunction *builtInFunc;
+    ElseStatement *elseStmt;
+    ElseIfStatement *elseIfStmt;
 }
 
 %token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
@@ -46,15 +51,18 @@ void yyerror(char const *);
 %type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS 
 
 // Non terminals
-%type <stmt>        statement 
-%type <integer>     constant 
-%type <ident>       identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction
-%type <expr>        primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression
-%type <exprList>    argumentExpressionList postfixExpression2 
-%type <ifStmt>      ifStatement;
-%type <whileStmt>   whileStatement;
-%type <stmtList>    statementList;
-%type <builtInFunc> builtInFunctionCall;
+%type <stmt>            statement 
+%type <integer>         constant 
+%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction
+%type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression
+%type <exprList>        argumentExpressionList postfixExpression2 
+%type <elseIfStmtList>  elseIfStatementList
+%type <ifStmt>          ifStatement
+%type <elseStmt>        elseStatement
+%type <elseIfStmt>      elseIfStatement
+%type <whileStmt>       whileStatement
+%type <stmtList>        statementList
+%type <builtInFunc>     builtInFunctionCall
 
 %start input
 
@@ -79,6 +87,23 @@ statement:
 ifStatement:
     IF expression COLON END                                                 {$$ = new IfStatement($2);}
 |   IF expression COLON statementList END                                   {$$ = new IfStatement($2, $4);}
+|   IF expression COLON elseIfStatementList END                             {$$ = new IfStatement($2); for(int i = 0; i < $4->size(); i++){$$->addElseIfClause($4->at(i));}}
+|   IF expression COLON statementList elseIfStatementList END               {$$ = new IfStatement($2, $4); for(int i = 0; i < $5->size(); i++){$$->addElseIfClause($5->at(i));}}
+;
+
+elseStatement:                                                              
+    ELSE COLON                                                              {$$ = new ElseStatement();}
+|   ELSE COLON statementList                                                {$$ = new ElseStatement($3);}  
+;  
+
+elseIfStatement:                                                              
+    ELSE IF expression COLON                                                {$$ = new ElseIfStatement($3);}
+|   ELSE IF expression COLON statementList                                  {$$ = new ElseIfStatement($3, $5);}  
+;  
+
+elseIfStatementList:
+    elseIfStatement                                                         {$$ = new std::vector<ElseIfStatement *>(); $$->push_back($1);}
+|   elseIfStatementList elseIfStatement                                     {$$->push_back($2);}
 ;
 
 whileStatement:

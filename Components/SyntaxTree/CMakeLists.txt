@@ -7,6 +7,8 @@ set(SOURCE_FILES src/Expression.cpp
                  src/FunctionCall.cpp 
                  src/NotEqualsExpression.cpp
                  src/IfStatement.cpp
+                 src/ElseStatement.cpp
+                 src/ElseIfStatement.cpp
                  src/WhileStatement.cpp
                  src/StatementList.cpp
                  src/BuiltInFunction.cpp

@@ -20,6 +20,11 @@ IfStatement::~IfStatement()
 
 }
 
+void IfStatement::addElseIfClause(ElseIfStatement *clause)
+{
+    this->elseIfClauses.push_back(clause);
+}
+
 
 std::string IfStatement::toCode() const
 {
@@ -31,5 +36,12 @@ std::string IfStatement::toCode() const
         retVal += tempStr;
     }
     retVal += "\n}";
+    if(this->elseIfClauses.size() > 0)
+    {
+        for(int i = 0; i < this->elseIfClauses.size(); i++)
+        {
+            retVal += this->elseIfClauses.at(i)->toCode();
+        }
+    }
     return retVal;  
 }
