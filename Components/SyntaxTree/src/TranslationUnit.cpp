@@ -35,7 +35,7 @@ bool blobDetected()
     blob = ptdat->blob;
     pthread_mutex_unlock(&count_mutex);
 
-    blobSufficient = (blob.size > 20);  
+    return (blob.size > 20);  
 }
 
 void *worker(void *p_thread_dat)

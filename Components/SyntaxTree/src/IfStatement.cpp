@@ -25,6 +25,10 @@ void IfStatement::addElseIfClause(ElseIfStatement *clause)
     this->elseIfClauses.push_back(clause);
 }
 
+void IfStatement::addElseClause(ElseStatement *clause)
+{
+    this->elseStatement = clause;
+}
 
 std::string IfStatement::toCode() const
 {
@@ -42,6 +46,10 @@ std::string IfStatement::toCode() const
         {
             retVal += this->elseIfClauses.at(i)->toCode();
         }
+    }
+    if(this->elseStatement != nullptr)
+    {
+        retVal += this->elseStatement->toCode();
     }
     return retVal;  
 }

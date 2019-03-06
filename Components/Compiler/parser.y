@@ -16,6 +16,7 @@
 #include "BuiltInFunction.hpp"
 #include "ElseStatement.hpp"
 #include "ElseIfStatement.hpp"
+#include "ExpressionStatement.hpp"
 #include <string>
 #include <vector>
 
@@ -43,6 +44,7 @@ void yyerror(char const *);
     BuiltInFunction *builtInFunc;
     ElseStatement *elseStmt;
     ElseIfStatement *elseIfStmt;
+    ExpressionStatement *expStmt;
 }
 
 %token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
@@ -63,147 +65,157 @@ void yyerror(char const *);
 %type <whileStmt>       whileStatement
 %type <stmtList>        statementList
 %type <builtInFunc>     builtInFunctionCall
+%type <expStmt>         expressionStatement
 
 %start input
 
 %%
 
 input:
-    statementList                                                           {base = new TranslationUnit($1);}
+    statementList                                                               {base = new TranslationUnit($1);}
 ;
 
 statementList:
-    statement                                                               {$$ = new StatementList(); $$->addStatement($1);}
-|   statementList statement                                                 {$$->addStatement($2);}    
+    statement                                                                   {$$ = new StatementList(); $$->addStatement($1);}
+|   statementList statement                                                     {$$->addStatement($2);}    
 ;
 
 // Statements
 
 statement:
-    ifStatement                                                             {$$ = $1;}
-|   whileStatement                                                          {$$ = $1;}
+    ifStatement                                                                 {$$ = $1;}
+|   whileStatement                                                              {$$ = $1;}
+|   expressionStatement                                                         {$$ = $1;}
+;
+
+expressionStatement:
+    expression                                                                  {$$ = new ExpressionStatement($1);}
 ;
 
 ifStatement:
-    IF expression COLON END                                                 {$$ = new IfStatement($2);}
-|   IF expression COLON statementList END                                   {$$ = new IfStatement($2, $4);}
-|   IF expression COLON elseIfStatementList END                             {$$ = new IfStatement($2); for(int i = 0; i < $4->size(); i++){$$->addElseIfClause($4->at(i));}}
-|   IF expression COLON statementList elseIfStatementList END               {$$ = new IfStatement($2, $4); for(int i = 0; i < $5->size(); i++){$$->addElseIfClause($5->at(i));}}
+    IF expression COLON END                                                     {$$ = new IfStatement($2);}
+|   IF expression COLON statementList END                                       {$$ = new IfStatement($2, $4);}
+|   IF expression COLON elseIfStatementList END                                 {$$ = new IfStatement($2); for(int i = 0; i < $4->size(); i++){$$->addElseIfClause($4->at(i));}}
+|   IF expression COLON statementList elseIfStatementList END                   {$$ = new IfStatement($2, $4); for(int i = 0; i < $5->size(); i++){$$->addElseIfClause($5->at(i));}}
+|   IF expression COLON statementList elseIfStatementList elseStatement END     {$$ = new IfStatement($2, $4); $$->addElseClause($6); for(int i = 0; i < $5->size(); i++){$$->addElseIfClause($5->at(i));}}
+|   IF expression COLON statementList elseStatement END                         {$$ = new IfStatement($2, $4); $$->addElseClause($5);}
+|   IF expression COLON elseIfStatementList elseStatement END                   {$$ = new IfStatement($2); $$->addElseClause($5); for(int i = 0; i < $4->size(); i++){$$->addElseIfClause($4->at(i));}}
+|   IF expression COLON elseStatement END                                       {$$ = new IfStatement($2); $$->addElseClause($4);}
 ;
 
 elseStatement:                                                              
-    ELSE COLON                                                              {$$ = new ElseStatement();}
-|   ELSE COLON statementList                                                {$$ = new ElseStatement($3);}  
-;  
+    ELSE COLON                                                                  {$$ = new ElseStatement();}
+|   ELSE COLON statementList                                                    {$$ = new ElseStatement($3);}  
+;
 
 elseIfStatement:                                                              
-    ELSE IF expression COLON                                                {$$ = new ElseIfStatement($3);}
-|   ELSE IF expression COLON statementList                                  {$$ = new ElseIfStatement($3, $5);}  
+    ELSE IF expression COLON                                                    {$$ = new ElseIfStatement($3);}
+|   ELSE IF expression COLON statementList                                      {$$ = new ElseIfStatement($3, $5);}  
 ;  
 
 elseIfStatementList:
-    elseIfStatement                                                         {$$ = new std::vector<ElseIfStatement *>(); $$->push_back($1);}
-|   elseIfStatementList elseIfStatement                                     {$$->push_back($2);}
+    elseIfStatement                                                             {$$ = new std::vector<ElseIfStatement *>(); $$->push_back($1);}
+|   elseIfStatementList elseIfStatement                                         {$$->push_back($2);}
 ;
 
 whileStatement:
-    WHILE expression COLON END                                              {$$ = new WhileStatement($2);}
-|   WHILE expression COLON statementList END                                {$$ = new WhileStatement($2, $4);}
+    WHILE expression COLON END                                                  {$$ = new WhileStatement($2);}
+|   WHILE expression COLON statementList END                                    {$$ = new WhileStatement($2, $4);}
 ;
 
 // Expressions
-expression:
-    builtInFunctionCall                                                     {$$ = $1;}    
-|   assignmentExpression                                                    {$$ = $1;}
+expression: 
+    assignmentExpression                                                        {$$ = $1;}
 ;
 
 builtInFunctionCall:
-    builtInType DOT builtInFunction LEFTPAREN RIGHTPAREN                    {$$ = new BuiltInFunction($3);} 
-|   builtInType DOT builtInFunction argumentExpressionList                  {$$ = new BuiltInFunction($3, $4);}
+    builtInType DOT builtInFunction LEFTPAREN RIGHTPAREN                        {$$ = new BuiltInFunction($3);} 
+|   builtInType DOT builtInFunction LEFTPAREN argumentExpressionList RIGHTPAREN {$$ = new BuiltInFunction($3, $5);}
 ;
 
 builtInType:
-    BUILTINTYPE                                                             {$$ = new Identifier(yytext);}
+    BUILTINTYPE                                                                 {$$ = new Identifier(yytext);}
 ;
 
 builtInFunction:
-    BUILTINFUNCTION                                                         {$$ = new Identifier(yytext);}
+    BUILTINFUNCTION                                                             {$$ = new Identifier(yytext);}
 ;
 
 assignmentExpression:
-    equalityExpression                                                      {$$ = $1;}
-|   equalityExpression equalsOp assignmentExpression                        {$$ = new ArithmaticExpression($1, $2, $3);}   
+    equalityExpression                                                          {$$ = $1;}
+|   equalityExpression equalsOp assignmentExpression                            {$$ = new ArithmaticExpression($1, $2, $3);}   
 ;
 
 equalsOp:
-    EQUALS                                                                  {$$ = new Identifier(yytext);}
+    EQUALS                                                                      {$$ = new Identifier(yytext);}
 ;
 
 equalityExpression:
-    notEqualsExpression                                                     {$$ = $1;}
-|   equalityExpression eqalityOp equalityExpression                         {$$ = new ArithmaticExpression($1, $2, $3);}    
+    notEqualsExpression                                                         {$$ = $1;}
+|   equalityExpression eqalityOp equalityExpression                             {$$ = new ArithmaticExpression($1, $2, $3);}    
 ;
 
 eqalityOp:
-    EQUALITYOP                                                              {$$ = new Identifier(yytext);}
+    EQUALITYOP                                                                  {$$ = new Identifier(yytext);}
 ;
 
 notEqualsExpression:
-    addSubExpression                                                        {$$ = $1;}
-|   NOT multDivRemExpression                                                {$$ = new NotEqualsExpression($2);}    
+    addSubExpression                                                            {$$ = $1;}
+|   NOT multDivRemExpression                                                    {$$ = new NotEqualsExpression($2);}   
 ;
 
 addSubExpression:
-    multDivRemExpression                                                    {$$ = $1;}
-|   multDivRemExpression addSubOp addSubExpression                          {$$ = new ArithmaticExpression($1, $2, $3);}
+    multDivRemExpression                                                        {$$ = $1;}
+|   multDivRemExpression addSubOp addSubExpression                              {$$ = new ArithmaticExpression($1, $2, $3);}
 ;
 
 addSubOp:
-    ADD                                                                     {$$ = new Identifier(yytext);}
-|   SUB                                                                     {$$ = new Identifier(yytext);}
+    ADD                                                                         {$$ = new Identifier(yytext);}
+|   SUB                                                                         {$$ = new Identifier(yytext);}
 ;
 
 multDivRemExpression:
-    postfixExpression                                                       {$$ = $1;}
-|   primaryExpression multDivRemOp multDivRemExpression                     {$$ = new ArithmaticExpression($1, $2, $3);}
+    postfixExpression                                                           {$$ = $1;}
+|   primaryExpression multDivRemOp multDivRemExpression                         {$$ = new ArithmaticExpression($1, $2, $3);}
 ;
 
 multDivRemOp:
-    MUL                                                                     {$$ = new Identifier(yytext);}
-|   DIV                                                                     {$$ = new Identifier(yytext);}
-|   MOD                                                                     {$$ = new Identifier(yytext);}
+    MUL                                                                         {$$ = new Identifier(yytext);}
+|   DIV                                                                         {$$ = new Identifier(yytext);}
+|   MOD                                                                         {$$ = new Identifier(yytext);}
 ;    
 
 postfixExpression:
-    primaryExpression                                                       {$$ = $1;}
-|   postfixExpression LEFTPAREN postfixExpression2                          {$$ = new FunctionCall($1, $3);}                            
-|   postfixExpression LEFTPAREN expression RIGHTPAREN                       {$$ = new FunctionCall($1, $3);}    
+    primaryExpression                                                           {$$ = $1;}
+|   postfixExpression LEFTPAREN postfixExpression2                              {$$ = new FunctionCall($1, $3);}                            
+|   postfixExpression LEFTPAREN expression RIGHTPAREN                           {$$ = new FunctionCall($1, $3);}    
 ;
 
 postfixExpression2:
-    RIGHTPAREN                                                              {$$ = new std::vector<Expression *>();}
-|   argumentExpressionList RIGHTPAREN                                       {$$ = $1;}
+    RIGHTPAREN                                                                  {$$ = new std::vector<Expression *>();}
+|   argumentExpressionList RIGHTPAREN                                           {$$ = $1;}
 ;
 
 argumentExpressionList:
-    expression                                                              {$$ = new std::vector<Expression *>();}
-|   argumentExpressionList COMMA expression                                 {$$->push_back($3);}
+    expression                                                                  {$$ = new std::vector<Expression *>(); $$->push_back($1);}
+|   argumentExpressionList COMMA expression                                     {$$->push_back($3);}
 ;
 
 primaryExpression:
-    identifier                                                              {$$ = $1;}
-|   constant                                                                {$$ = $1;}
-|   LEFTPAREN primaryExpression RIGHTPAREN                                  {$$ = $2;}
+    builtInFunctionCall                                                         {$$ = $1;}
+|   identifier                                                                  {$$ = $1;}
+|   constant                                                                    {$$ = $1;}
+|   LEFTPAREN primaryExpression RIGHTPAREN                                      {$$ = $2;}
 ;
 
 constant:
-    INTCONST                                                                {$$ = new Integer(yytext);}
-|   TRUE                                                                    {$$ = new Integer(yytext);}
-|   FALSE                                                                   {$$ = new Integer(yytext);}
+    INTCONST                                                                    {$$ = new Integer(yytext);}
+|   TRUE                                                                        {$$ = new Integer(yytext);}
+|   FALSE                                                                       {$$ = new Integer(yytext);}
 ;
 
 identifier:
-    IDENTIFIER                                                              {$$ = new Identifier(yytext);}
+    IDENTIFIER                                                                  {$$ = new Identifier(yytext);}
 ;
 %%
 

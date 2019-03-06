@@ -2,14 +2,17 @@
 
 BuiltInFunction::BuiltInFunction(Identifier *functionName, std::vector<Expression *> *argumentList)
 {
-
+    if(functionName->toCode() == "Pause")
+    {
+        this->expression = "delay";
+    }
 
     this->argumentList = argumentList;
 
     this->expression += "(";
     for(int i = 0; i < this->argumentList->size(); i++)
-    {
-        if(i == this->argumentList->size())
+    {        
+        if(i == this->argumentList->size() - 1)
         {
             this->expression += this->argumentList->at(i)->toCode();
         }
@@ -29,7 +32,7 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName)
     }
     else if (functionName->toCode() == "Stop") 
     {
-        this->expression = "initio_DriveForward(0)";
+        this->expression = "initio_DriveForward(speed)";
     }
     else if(functionName->toCode() == "BlobVisible")
     {

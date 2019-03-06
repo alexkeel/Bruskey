@@ -17,6 +17,7 @@
 #include "BuiltInFunction.hpp"
 #include "ElseStatement.hpp"
 #include "ElseIfStatement.hpp"
+#include "ExpressionStatement.hpp"
 #include <string>
 #include "parser.tab.hpp"
 
@@ -28,7 +29,7 @@ int charLength = 1;
 
 BuiltInType Robot
 
-BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward
+BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause
 
 Keyword auto|double|int|struct|break|else|long|switch|case|enum|register|typedef|char|extern|return|union|const|float|short|unsigned|continue|for|signed|void|default|goto|sizeof|volatile|do|if|static|while
 

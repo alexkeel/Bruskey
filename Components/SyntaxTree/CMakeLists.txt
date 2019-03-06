@@ -12,6 +12,7 @@ set(SOURCE_FILES src/Expression.cpp
                  src/WhileStatement.cpp
                  src/StatementList.cpp
                  src/BuiltInFunction.cpp
+                 src/ExpressionStatement.cpp
                  src/Common.cpp
  )
 
