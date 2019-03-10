@@ -18,6 +18,7 @@
 #include "ElseStatement.hpp"
 #include "ElseIfStatement.hpp"
 #include "ExpressionStatement.hpp"
+#include "ParenthesesExpression.hpp"
 #include <string>
 #include "parser.tab.hpp"
 
@@ -29,7 +30,7 @@ int charLength = 1;
 
 BuiltInType Robot
 
-BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause
+BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause|GetBlobHAlignment
 
 Keyword auto|double|int|struct|break|else|long|switch|case|enum|register|typedef|char|extern|return|union|const|float|short|unsigned|continue|for|signed|void|default|goto|sizeof|volatile|do|if|static|while
 
@@ -73,7 +74,9 @@ All .
 [<]                 {return LESSTHAN;}
 [>]                 {return GREATERTHAN;}
 [.]                 {return DOT;}
-[==]                {return EQUALITYOP;}
+(<=)                {return LESSTHANOREQUAL;}
+(>=)                {return GREATERTHANOREQUAL;}
+(==)                {return EQUALITYOP;}
 true                {return TRUE;}
 false               {return FALSE;}
 
@@ -94,7 +97,7 @@ end                 {return END;}
 
 {Identifier}        {return IDENTIFIER;}
 
-({HexConstant}|{OctalConstant}|{DecimalConstant}){IntegerSuffix}?   {return INTCONST;}
+(-)?({HexConstant}|{OctalConstant}|{DecimalConstant}){IntegerSuffix}?   {return INTCONST;}
 
 {WhiteSpace}        {;}
 {Tab}               {;}

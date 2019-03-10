@@ -13,6 +13,7 @@ set(SOURCE_FILES src/Expression.cpp
                  src/StatementList.cpp
                  src/BuiltInFunction.cpp
                  src/ExpressionStatement.cpp
+                 src/ParenthesesExpression.cpp
                  src/Common.cpp
  )
 

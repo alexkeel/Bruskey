@@ -6,6 +6,18 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName, std::vector<Expressio
     {
         this->expression = "delay";
     }
+    else if(functionName->toCode() == "SpinRight")
+    {
+        this->expression = "initio_SpinRight";
+    }
+    else if(functionName->toCode() == "SpinLeft")
+    {
+        this->expression = "initio_SpinLeft";
+    }
+    else if(functionName->toCode() == "DriveForward")
+    {
+        this->expression = "initio_DriveForward";
+    }
 
     this->argumentList = argumentList;
 
@@ -32,7 +44,7 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName)
     }
     else if (functionName->toCode() == "Stop") 
     {
-        this->expression = "initio_DriveForward(speed)";
+        this->expression = "initio_DriveForward(0)";
     }
     else if(functionName->toCode() == "BlobVisible")
     {
@@ -53,6 +65,10 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName)
     else if(functionName->toCode() == "DriveBackwards")
     {
         this->expression = "initio_DriveReverse(speed)";
+    }
+    else if(functionName->toCode() == "GetBlobHAlignment")
+    {
+        this->expression = "blob.halign";
     }
 }
 

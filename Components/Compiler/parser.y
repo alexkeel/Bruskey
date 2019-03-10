@@ -17,6 +17,7 @@
 #include "ElseStatement.hpp"
 #include "ElseIfStatement.hpp"
 #include "ExpressionStatement.hpp"
+#include "ParenthesesExpression.hpp"
 #include <string>
 #include <vector>
 
@@ -47,7 +48,7 @@ void yyerror(char const *);
     ExpressionStatement *expStmt;
 }
 
-%token EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
+%token GREATERTHANOREQUAL LESSTHANOREQUAL EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
 
 // Terminals
 %type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS 
@@ -55,8 +56,8 @@ void yyerror(char const *);
 // Non terminals
 %type <stmt>            statement 
 %type <integer>         constant 
-%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction
-%type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression
+%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction lessMoreThanOp
+%type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression lessMoreThanExpression parenthesesExpression
 %type <exprList>        argumentExpressionList postfixExpression2 
 %type <elseIfStmtList>  elseIfStatementList
 %type <ifStmt>          ifStatement
@@ -126,6 +127,7 @@ whileStatement:
 // Expressions
 expression: 
     assignmentExpression                                                        {$$ = $1;}
+|   parenthesesExpression                                                       {$$ = $1;}
 ;
 
 builtInFunctionCall:
@@ -140,6 +142,10 @@ builtInType:
 builtInFunction:
     BUILTINFUNCTION                                                             {$$ = new Identifier(yytext);}
 ;
+
+parenthesesExpression:                                                
+    LEFTPAREN expression RIGHTPAREN                                             {$$ = new ParenthesesExpression($2);}
+;    
 
 assignmentExpression:
     equalityExpression                                                          {$$ = $1;}
@@ -160,8 +166,20 @@ eqalityOp:
 ;
 
 notEqualsExpression:
+    lessMoreThanExpression                                                      {$$ = $1;}
+|   NOT notEqualsExpression                                                     {$$ = new NotEqualsExpression($2);}   
+;
+
+lessMoreThanExpression:
     addSubExpression                                                            {$$ = $1;}
-|   NOT multDivRemExpression                                                    {$$ = new NotEqualsExpression($2);}   
+|   expression lessMoreThanOp expression                                        {$$ = new ArithmaticExpression($1, $2, $3);}
+;
+
+lessMoreThanOp:
+    LESSTHAN                                                                    {$$ = new Identifier(yytext);}
+|   GREATERTHAN                                                                 {$$ = new Identifier(yytext);}
+|   GREATERTHANOREQUAL                                                          {$$ = new Identifier(yytext);}
+|   LESSTHANOREQUAL                                                             {$$ = new Identifier(yytext);}
 ;
 
 addSubExpression:

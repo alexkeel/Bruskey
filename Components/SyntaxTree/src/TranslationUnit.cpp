@@ -26,6 +26,11 @@ struct thread_dat {
 };
 
 int speed;
+int obstacle_L, obstacle_R, obstacle; 
+int blobSufficient; 
+int carBlobAligned; 
+int distance;
+int speed = 50;
 
 pthread_mutex_t count_mutex; 
 
@@ -64,12 +69,6 @@ void *worker(void *p_thread_dat)
 
 void camcar(int argc, char *argv[], struct thread_dat *ptdat) 
 {
-    int obstacle_L, obstacle_R, obstacle; 
-    int blobSufficient; 
-    int carBlobAligned; 
-    int distance;
-    int speed = 50;
-
 )";
     for(int x = 0; x < this->statementList.size(); x++)
     {
