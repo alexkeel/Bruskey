@@ -56,8 +56,8 @@ void yyerror(char const *);
 // Non terminals
 %type <stmt>            statement 
 %type <integer>         constant 
-%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction lessMoreThanOp
-%type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression lessMoreThanExpression parenthesesExpression
+%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction lessMoreThanOp andOrOp
+%type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression lessMoreThanExpression parenthesesExpression andOrExpression
 %type <exprList>        argumentExpressionList postfixExpression2 
 %type <elseIfStmtList>  elseIfStatementList
 %type <ifStmt>          ifStatement
@@ -167,11 +167,11 @@ eqalityOp:
 
 notEqualsExpression:
     lessMoreThanExpression                                                      {$$ = $1;}
-|   NOT notEqualsExpression                                                     {$$ = new NotEqualsExpression($2);}   
+|   NOT expression                                                              {$$ = new NotEqualsExpression($2);}   
 ;
 
 lessMoreThanExpression:
-    addSubExpression                                                            {$$ = $1;}
+ andOrExpression                                                            {$$ = $1;}
 |   expression lessMoreThanOp expression                                        {$$ = new ArithmaticExpression($1, $2, $3);}
 ;
 
@@ -180,6 +180,16 @@ lessMoreThanOp:
 |   GREATERTHAN                                                                 {$$ = new Identifier(yytext);}
 |   GREATERTHANOREQUAL                                                          {$$ = new Identifier(yytext);}
 |   LESSTHANOREQUAL                                                             {$$ = new Identifier(yytext);}
+;
+
+andOrExpression:
+    addSubExpression                                                            {$$ = $1;}
+|   expression andOrOp expression                                               {$$ = new ArithmaticExpression($1, $2, $3);}
+;
+
+andOrOp:
+    AND                                                                         {$$ = new Identifier("&&");}
+|   OR                                                                          {$$ = new Identifier("||");}    
 ;
 
 addSubExpression:

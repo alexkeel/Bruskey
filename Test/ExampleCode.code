@@ -1,26 +1,25 @@
-Robot MyRobot
+while true:
+    if Robot.ObstacleDetected():
+	Robot.Stop()
+    else:
+	if not Robot.BlobVisible():
+   	    Robot.SpinLeft()
+            Robot.Pause(500)
+	else:
+	    if not ((Robot.GetBlobHAlignment() > -30) and (Robot.GetBlobHAlignment() < 30)):
 
-function main()
-    while true:
-        if MyRobot.ObstacleDetected():
-            print "Obstacle Detected"
-            MyRobot.Stop()
-        else:
-            if not MyRobot.BlobVisible(255,0,0):
-                MyRobot.SpinLeft(80)
-                Pause(300)
-                MyRobot.Stop()
-            else:
-                MyRobot.AlignWithBlob(255, 0, 0)
-                
-                if MyRobot.GetDistanceFromObstacle() < 30:
-                    MyRobot.DriveBackward()
-                else if MyRobot.GetDistanceFromObstacle() > 100:
-                    MyRobot.DriveForward()
-                else:
-                    // Do nothing
+		if Robot.GetBlobHAlignment() < -30:
+                    Robot.SpinRight(80)
+		else if Robot.GetBlobHAlignment() > 30:
+		    Robot.SpinLeft(80)
                 end
-            end
-        end
+	    end
+
+	    if Robot.GetDistance() < 30:
+		Robot.DriveBackward()
+	    else if Robot.GetDistance() > 100:
+		Robot.DriveForward()
+	    end
+	end
     end
 end

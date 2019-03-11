@@ -34,6 +34,14 @@ int speed = 50;
 
 pthread_mutex_t count_mutex; 
 
+int getBlobHAlignment()
+{
+    pthread_mutex_lock(&count_mutex);
+    blob = ptdat->blob;
+    pthread_mutex_unlock(&count_mutex);
+    return blob.halign;
+}
+
 bool blobDetected()
 {
     pthread_mutex_lock(&count_mutex);

@@ -18,6 +18,10 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName, std::vector<Expressio
     {
         this->expression = "initio_DriveForward";
     }
+    else if(functionName->toCode() == "DriveBackward")
+    {
+        this->expression = "initio_DriveReverse";
+    }
 
     this->argumentList = argumentList;
 
@@ -62,13 +66,17 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName)
     {
         this->expression = "initio_DriveForward(speed)";
     }
-    else if(functionName->toCode() == "DriveBackwards")
+    else if(functionName->toCode() == "DriveBackward")
     {
         this->expression = "initio_DriveReverse(speed)";
     }
     else if(functionName->toCode() == "GetBlobHAlignment")
     {
-        this->expression = "blob.halign";
+        this->expression = "getBlobHAlignment()";
+    }
+    else if(functionName->toCode() == "GetDistance")
+    {
+        this->expression = "initio_UsGetDistance()";
     }
 }
 

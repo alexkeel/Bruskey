@@ -30,7 +30,7 @@ int charLength = 1;
 
 BuiltInType Robot
 
-BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause|GetBlobHAlignment
+BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause|GetBlobHAlignment|GetDistance
 
 Keyword auto|double|int|struct|break|else|long|switch|case|enum|register|typedef|char|extern|return|union|const|float|short|unsigned|continue|for|signed|void|default|goto|sizeof|volatile|do|if|static|while
 
