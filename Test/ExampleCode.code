@@ -2,24 +2,24 @@ while true:
     if Robot.ObstacleDetected():
 	Robot.Stop()
     else:
-	if not Robot.BlobVisible():
-   	    Robot.SpinLeft()
+	    if not Robot.BlobVisible():
+            Robot.SpinLeft()
             Robot.Pause(500)
-	else:
-	    if not ((Robot.GetBlobHAlignment() > -30) and (Robot.GetBlobHAlignment() < 30)):
+	    else:
+	        if not ((Robot.GetBlobHAlignment() > -30) and (Robot.GetBlobHAlignment() < 30)):
 
-		if Robot.GetBlobHAlignment() < -30:
+		        if Robot.GetBlobHAlignment() < -30:
                     Robot.SpinRight(80)
-		else if Robot.GetBlobHAlignment() > 30:
-		    Robot.SpinLeft(80)
+		        else if Robot.GetBlobHAlignment() > 30:
+		            Robot.SpinLeft(80)
                 end
-	    end
+	        end
 
-	    if Robot.GetDistance() < 30:
-		Robot.DriveBackward()
-	    else if Robot.GetDistance() > 100:
-		Robot.DriveForward()
+            if Robot.GetDistance() < 30:
+                Robot.DriveBackward()
+            else if Robot.GetDistance() > 100:
+                Robot.DriveForward()
+            end
 	    end
-	end
     end
 end
