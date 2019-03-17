@@ -22,6 +22,7 @@ private slots:
     void open();
     bool save();
     bool saveAs();
+    void run();
     void about();
     void documentWasModified();
     #ifndef QT_NO_SESSIONMANAGER

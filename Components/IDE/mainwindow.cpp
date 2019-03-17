@@ -106,6 +106,7 @@ void MainWindow::createActions()
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Open an existing file"));
     connect(openAct, &QAction::triggered, this, &MainWindow::open);
+    fileMenu->addAction(openAct);
     fileToolbar->addAction(openAct);
 
     const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
@@ -116,11 +117,18 @@ void MainWindow::createActions()
     fileMenu->addAction(saveAct);
     fileToolbar->addAction(saveAct);
 
+    const QIcon runIcon = QIcon(":/images/compile.png");
+    QAction *runAct = new QAction(runIcon, tr("&Compile code..."), this);
+    //saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    runAct->setStatusTip(tr("Compile code"));
+    connect(runAct, &QAction::triggered, this, &MainWindow::run);
+    fileMenu->addAction(runAct);
+    fileToolbar->addAction(runAct);
+
     const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
     QAction *saveAsAct = fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
     saveAsAct->setShortcuts(QKeySequence::SaveAs);
     saveAsAct->setStatusTip(tr("Save the document under a new name"));
-
 
     fileMenu->addSeparator();
 
@@ -288,6 +296,16 @@ bool MainWindow::setCurrentFile(const QString &fileName)
 QString MainWindow::strippedName(const QString &fullFileName)
 {
     return QFileInfo(fullFileName).fileName();
+}
+
+void MainWindow::run()
+{
+    this->save();
+    QProcess process;
+    process.setStandardOutputFile("output.c");
+    process.setStandardInputFile(curFile);
+    process.start("Brusky");
+    process.waitForFinished();
 }
 
 #ifndef QT_NO_SESSIONMANAGER

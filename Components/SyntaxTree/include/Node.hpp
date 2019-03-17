@@ -13,8 +13,6 @@ public:
 
     virtual std::string toCode() const = 0;
 
-private:
-    std::vector<Node *> children;
 };
 
 #endif

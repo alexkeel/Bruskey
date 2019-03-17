@@ -149,7 +149,7 @@ parenthesesExpression:
 
 assignmentExpression:
     equalityExpression                                                          {$$ = $1;}
-|   equalityExpression equalsOp assignmentExpression                            {$$ = new ArithmaticExpression($1, $2, $3);}   
+|   assignmentExpression equalsOp assignmentExpression                          {$$ = new ArithmaticExpression($1, $2, $3);}   
 ;
 
 equalsOp:
@@ -171,7 +171,7 @@ notEqualsExpression:
 ;
 
 lessMoreThanExpression:
- andOrExpression                                                            {$$ = $1;}
+    andOrExpression                                                             {$$ = $1;}
 |   expression lessMoreThanOp expression                                        {$$ = new ArithmaticExpression($1, $2, $3);}
 ;
 

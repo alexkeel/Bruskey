@@ -6,5 +6,6 @@
         <file>images/new.png</file>
         <file>images/cut.png</file>
         <file>images/copy.png</file>
+        <file>images/compile.png</file>
     </qresource>
 </RCC>
