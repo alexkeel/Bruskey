@@ -1,8 +1,12 @@
 #include <QtWidgets>
 #include "mainwindow.h"
 
-MainWindow::MainWindow() : textEdit(new QPlainTextEdit)
+MainWindow::MainWindow()
 {
+    //setupFileMenu();
+    //setupHelpMenu();
+    setupEditor();
+
     setCentralWidget(textEdit);
 
     createActions();
@@ -19,6 +23,25 @@ MainWindow::MainWindow() : textEdit(new QPlainTextEdit)
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+}
+
+void MainWindow::setupEditor()
+{
+    QFont font;
+    font.setFamily("Courier");
+    font.setFixedPitch(true);
+    font.setPointSize(10);
+
+    this->textEdit = new QPlainTextEdit();
+    this->textEdit->setFont(font);
+
+    highlighter = new Highlighter(this->textEdit->document());
+
+    QFile file("mainwindow.h");
+    if(file.open(QFile::ReadOnly | QFile::Text))
+    {
+        this->textEdit->setPlainText(file.readAll());
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

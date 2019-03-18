@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSessionManager>
 #include <QPlainTextEdit>
+#include "highlighter.h"
 
 class MainWindow : public QMainWindow
 {
@@ -30,6 +31,9 @@ private slots:
     #endif
 
 private:
+    void setupEditor();
+    void setupFileMenu();
+    void setupHelpMenu();
     void createActions();
     void createStatusBar();
     void readSettings();
@@ -41,6 +45,7 @@ private:
 
     QPlainTextEdit *textEdit;
     QString curFile;
+    Highlighter *highlighter;
 
 };
 
