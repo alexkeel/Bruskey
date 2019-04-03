@@ -29,11 +29,6 @@ FunctionCall::FunctionCall(Expression *ident)
     this->expression = ident->toCode() + "()";
 }
 
-std::string FunctionCall::toCode() const
-{
-    return this->expression;
-}
-
 FunctionCall::~FunctionCall()
 {
 

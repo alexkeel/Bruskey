@@ -79,8 +79,3 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName)
         this->expression = "initio_UsGetDistance()";
     }
 }
-
-std::string BuiltInFunction::toCode() const
-{
-    return this->expression;
-}

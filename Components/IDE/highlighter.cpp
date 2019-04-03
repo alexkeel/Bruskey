@@ -17,7 +17,7 @@ Highlighter::Highlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
     keywordPatterns << "\\bchar\\b" << "\\bbool\\b" << "\\bint\\b"
                     << "\\bfloat\\b" << "\\bif\\b" << "\\bwhile\\b"
                     << "\\belse\\b" << "\\bend\\b" << "\\bnot\\b"
-                    << "\\btrue\\b";
+                    << "\\btrue\\b" << "\\band\\b";
     foreach(const QString &pattern,  keywordPatterns)
     {
         rule.pattern = QRegularExpression(pattern);

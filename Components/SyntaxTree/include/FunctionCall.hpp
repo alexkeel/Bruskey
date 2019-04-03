@@ -16,7 +16,6 @@ public:
     ~FunctionCall(); 
 
 private:
-    virtual std::string toCode() const;
 };
 
 #endif

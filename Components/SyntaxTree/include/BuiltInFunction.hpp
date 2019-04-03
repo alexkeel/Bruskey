@@ -8,8 +8,8 @@ class BuiltInFunction : public Expression
 public:
     BuiltInFunction(Identifier *functionName, std::vector<Expression *> *argumentList);
     BuiltInFunction(Identifier *functionName);
+    ~BuiltInFunction(){}
 
-    virtual std::string toCode() const;
 private:
     std::vector<Expression *> *argumentList;    
 };

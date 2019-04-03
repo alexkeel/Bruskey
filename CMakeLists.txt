@@ -3,6 +3,7 @@ project(Bruskey)
 
 
 add_subdirectory(Components)
+add_subdirectory(Libs)
 
 
 

@@ -3,8 +3,6 @@
 
 MainWindow::MainWindow()
 {
-    //setupFileMenu();
-    //setupHelpMenu();
     setupEditor();
 
     setCentralWidget(textEdit);
@@ -142,7 +140,7 @@ void MainWindow::createActions()
 
     const QIcon runIcon = QIcon(":/images/compile.png");
     QAction *runAct = new QAction(runIcon, tr("&Compile code..."), this);
-    //saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    runAct->setShortcuts(QKeySequence::Preferences);
     runAct->setStatusTip(tr("Compile code"));
     connect(runAct, &QAction::triggered, this, &MainWindow::run);
     fileMenu->addAction(runAct);
@@ -324,11 +322,14 @@ QString MainWindow::strippedName(const QString &fullFileName)
 void MainWindow::run()
 {
     this->save();
+    // Generate C file
     QProcess process;
     process.setStandardOutputFile("output.c");
     process.setStandardInputFile(curFile);
     process.start("Brusky");
     process.waitForFinished();
+    // Compile C File
+
 }
 
 #ifndef QT_NO_SESSIONMANAGER
