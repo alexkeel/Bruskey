@@ -19,6 +19,7 @@
 #include "ElseIfStatement.hpp"
 #include "ExpressionStatement.hpp"
 #include "ParenthesesExpression.hpp"
+#include "VariableDeclaration.hpp"
 #include <string>
 #include "parser.tab.hpp"
 
@@ -30,9 +31,9 @@ int charLength = 1;
 
 BuiltInType Robot
 
-BuiltInFunction ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause|GetBlobHAlignment|GetDistance
+BuiltInFunction LeftLineDetected|RightLineDetected|ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause|GetBlobHAlignment|GetDistance
 
-Keyword auto|double|int|struct|break|else|long|switch|case|enum|register|typedef|char|extern|return|union|const|float|short|unsigned|continue|for|signed|void|default|goto|sizeof|volatile|do|if|static|while
+Type double|int|long|char|string|short
 
 Identifier [_a-zA-Z][_a-zA-Z0-9]*
 
@@ -77,6 +78,7 @@ All .
 (<=)                {return LESSTHANOREQUAL;}
 (>=)                {return GREATERTHANOREQUAL;}
 (==)                {return EQUALITYOP;}
+[=]                 {return EQUALS;}
 true                {return TRUE;}
 false               {return FALSE;}
 
@@ -92,6 +94,7 @@ end                 {return END;}
 
 \/\/.+              {}
 
+{Type}              {return TYPE;}
 {BuiltInType}       {return BUILTINTYPE;}
 {BuiltInFunction}   {return BUILTINFUNCTION;}
 

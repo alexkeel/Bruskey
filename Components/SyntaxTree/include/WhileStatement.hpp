@@ -13,8 +13,9 @@ public:
     WhileStatement(Expression *condition);
     ~WhileStatement();
 
-private:
     virtual std::string toCode() const; 
+
+private:
     std::string condition;
 };
 

@@ -11,7 +11,7 @@ FunctionCall::FunctionCall(Expression *ident, std::vector<Expression *> *argumen
     this->expression += "(";
     for(int i = 0; i < arguments->size(); i++)
     {
-        if(i == arguments->size())
+        if(i == arguments->size() - 1)
         {
             this->expression += (arguments->at(i)->toCode()); 
         }

@@ -18,6 +18,7 @@
 #include "ElseIfStatement.hpp"
 #include "ExpressionStatement.hpp"
 #include "ParenthesesExpression.hpp"
+#include "VariableDeclaration.hpp"
 #include <string>
 #include <vector>
 
@@ -46,9 +47,10 @@ void yyerror(char const *);
     ElseStatement *elseStmt;
     ElseIfStatement *elseIfStmt;
     ExpressionStatement *expStmt;
+    VariableDeclaration *varDclr;
 }
 
-%token GREATERTHANOREQUAL LESSTHANOREQUAL EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS
+%token GREATERTHANOREQUAL LESSTHANOREQUAL EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS TYPE
 
 // Terminals
 %type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS 
@@ -56,8 +58,8 @@ void yyerror(char const *);
 // Non terminals
 %type <stmt>            statement 
 %type <integer>         constant 
-%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction lessMoreThanOp andOrOp
-%type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression lessMoreThanExpression parenthesesExpression andOrExpression
+%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction lessMoreThanOp andOrOp type
+%type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression lessMoreThanExpression parenthesesExpression andOrExpression assignment
 %type <exprList>        argumentExpressionList postfixExpression2 
 %type <elseIfStmtList>  elseIfStatementList
 %type <ifStmt>          ifStatement
@@ -67,6 +69,7 @@ void yyerror(char const *);
 %type <stmtList>        statementList
 %type <builtInFunc>     builtInFunctionCall
 %type <expStmt>         expressionStatement
+%type <varDclr>         variableDeclaration
 
 %start input
 
@@ -87,6 +90,16 @@ statement:
     ifStatement                                                                 {$$ = $1;}
 |   whileStatement                                                              {$$ = $1;}
 |   expressionStatement                                                         {$$ = $1;}
+|   variableDeclaration                                                         {$$ = $1;}
+;
+
+variableDeclaration:
+    type identifier assignment                                                  {$$ = new VariableDeclaration($1, $2, $3);}
+|   type identifier                                                             {$$ = new VariableDeclaration($1, $2);}
+;
+
+type:
+    TYPE                                                                        {$$ = new Identifier(yytext);}
 ;
 
 expressionStatement:
@@ -128,6 +141,10 @@ whileStatement:
 expression: 
     assignmentExpression                                                        {$$ = $1;}
 |   parenthesesExpression                                                       {$$ = $1;}
+;
+
+assignment:
+    EQUALS constant                                                             {$$ = $2;}
 ;
 
 builtInFunctionCall:

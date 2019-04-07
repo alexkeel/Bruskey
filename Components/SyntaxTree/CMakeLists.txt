@@ -14,6 +14,7 @@ set(SOURCE_FILES src/Expression.cpp
                  src/BuiltInFunction.cpp
                  src/ExpressionStatement.cpp
                  src/ParenthesesExpression.cpp
+                 src/VariableDeclaration.cpp
                  src/Common.cpp
  )
 

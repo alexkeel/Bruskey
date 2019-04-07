@@ -78,4 +78,12 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName)
     {
         this->expression = "initio_UsGetDistance()";
     }
+    else if(functionName->toCode() == "LeftLineDetected")
+    {
+        this->expression = "initio_IrLineLeft()";
+    }
+    else if(functionName->toCode() == "RightLineDetected")
+    {
+        this->expression = "initio_IrLineRight()";
+    }
 }
