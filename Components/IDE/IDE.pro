@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui webkitwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    highlighter.cpp
+    highlighter.cpp \
+    blockly.cpp
 
 HEADERS += \
         mainwindow.h \
-    highlighter.h
+    highlighter.h \
+    blockly.h
 
 RESOURCES += \
     application.qrc

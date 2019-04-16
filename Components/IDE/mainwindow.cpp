@@ -35,6 +35,12 @@ void MainWindow::setupTabs()
 
     tabs->setTabPosition(QTabWidget::South);
 
+    // Add text edit to "blockly" tab, this will appear when the "code" tab is selected
+    this->blockly = new Blockly(this);
+    blocklyTab->setLayout(new QVBoxLayout());
+    blocklyTab->layout()->addWidget(this->blockly->getWebView());
+    blocklyTab->setLayout(blocklyTab->layout());
+
     // Add text edit to "code" tab, this will appear when the "code" tab is selected
     codeTab->setLayout(new QVBoxLayout());
     codeTab->layout()->addWidget(textEdit);

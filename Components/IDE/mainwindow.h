@@ -5,6 +5,7 @@
 #include <QSessionManager>
 #include <QPlainTextEdit>
 #include "highlighter.h"
+#include "blockly.h"
 
 class MainWindow : public QMainWindow
 {
@@ -44,6 +45,7 @@ private:
     bool setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
 
+    Blockly *blockly;
     QPlainTextEdit *textEdit;
     QString curFile;
     Highlighter *highlighter;
