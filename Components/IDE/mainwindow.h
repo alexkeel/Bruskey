@@ -32,6 +32,7 @@ private slots:
 
 private:
     void setupEditor();
+    void setupTabs();
     void setupFileMenu();
     void setupHelpMenu();
     void createActions();

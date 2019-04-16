@@ -82,6 +82,7 @@ All .
 true                {return TRUE;}
 false               {return FALSE;}
 
+is                  {return EQUALITYOP;}
 if                  {return IF;}
 equals              {return EQUALS;}
 else                {return ELSE;}

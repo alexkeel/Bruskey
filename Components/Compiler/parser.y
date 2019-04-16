@@ -179,7 +179,7 @@ equalityExpression:
 ;
 
 eqalityOp:
-    EQUALITYOP                                                                  {$$ = new Identifier(yytext);}
+    EQUALITYOP                                                                  {$$ = new Identifier("==");}
 ;
 
 notEqualsExpression:

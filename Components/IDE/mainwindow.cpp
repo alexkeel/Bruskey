@@ -5,7 +5,8 @@ MainWindow::MainWindow()
 {
     setupEditor();
 
-    setCentralWidget(textEdit);
+    // Add tabs and sets them as the central widget
+    this->setupTabs();
 
     createActions();
     createStatusBar();
@@ -21,6 +22,26 @@ MainWindow::MainWindow()
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+}
+
+void MainWindow::setupTabs()
+{
+    QTabWidget *tabs = new QTabWidget();
+    QWidget *codeTab = new QWidget();
+    QWidget *blocklyTab = new QWidget();
+
+    tabs->addTab(codeTab, "Code");
+    tabs->addTab(blocklyTab, "Blockly");
+
+    tabs->setTabPosition(QTabWidget::South);
+
+    // Add text edit to "code" tab, this will appear when the "code" tab is selected
+    codeTab->setLayout(new QVBoxLayout());
+    codeTab->layout()->addWidget(textEdit);
+    codeTab->setLayout(codeTab->layout());
+
+    this->setCentralWidget(tabs);
+    this->setLayout(this->layout());
 }
 
 void MainWindow::setupEditor()
