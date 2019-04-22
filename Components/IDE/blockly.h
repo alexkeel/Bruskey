@@ -1,7 +1,6 @@
 #ifndef BLOCKLY_H
 #define BLOCKLY_H
 
-#include <QtWebKitWidgets/QWebView>
 #include <QUrl>
 #include <QMainWindow>
 

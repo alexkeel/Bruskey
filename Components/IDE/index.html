@@ -6,6 +6,7 @@
   <script src="google-blockly/blockly_compressed.js"></script>
   <script src="google-blockly/blocks_compressed.js"></script>
   <script src="google-blockly/msg/js/en.js"></script>
+  <script src="google-blockly/blocks/bruskey.js"></script>
   <style>
     html, body {
       height: 100%;
@@ -142,6 +143,50 @@
         <block type="lists_getIndex"></block>
         <block type="lists_setIndex"></block>
       </category>
+      <category name="Built In" colour="#5ba55b">
+          <block type="initio_driveforward">
+            <value name="DriveForward">
+              <block type="math_number">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+          <block type="initio_drivebackward">
+            <value name="DriveBackward">
+              <block type="math_number">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+          <block type="initio_spinleft">
+            <value name="SpinLeft">
+              <block type="math_number">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+          <block type="initio_spinright">
+            <value name="SpinRight">
+              <block type="math_number">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+          <block type="initio_pause">
+            <value name="Pause">
+              <block type="math_number">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+          </block>
+          <block type="initio_leftlinedetected"></block>
+          <block type="initio_rightlinedetected"></block>
+          <block type="initio_getblobhalignment"></block>
+          <block type="initio_stop"></block>
+          <block type="initio_obstacledetected"></block>
+          <block type="initio_getdistance"></block>
+          <block type="initio_blobvisible"></block>
+        </category>
       <sep></sep>
       <category name="Variables" custom="VARIABLE" colour="%{BKY_VARIABLES_HUE}">
       </category>
@@ -175,6 +220,16 @@
     window.addEventListener('resize', onresize, false);
     onresize();
     Blockly.svgResize(demoWorkspace);
+  </script>
+
+  <script>
+    // Update this with brusky functions
+    function updateCode(event)
+    {
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      docuemnt.getElementById('textarea').value = code;
+    }
+    workspace.addChangeListener(updateCode);
   </script>
 </body>
 </html>
