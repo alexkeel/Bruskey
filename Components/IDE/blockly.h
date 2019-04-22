@@ -5,15 +5,18 @@
 #include <QUrl>
 #include <QMainWindow>
 
+#include <QtWebEngine/QtWebEngine>
+#include <QtWebEngineWidgets/QWebEngineView>
+
 class Blockly
 {
 public:
     Blockly(QMainWindow* parent);
 
-    QWebView* getWebView();
+    QWebEngineView* getWebView();
 
 private:
-    QWebView *webView;
+    QWebEngineView *view;
 };
 
 #endif // BLOCKLY_H
