@@ -11,7 +11,7 @@ TEST_CASE("Testing Built In Function")
     {
         Identifier *ident = new Identifier("ObstacleDetected");
         BuiltInFunction *func = new BuiltInFunction(ident);
-        REQUIRE(func->toCode() == "initio_IrLeft() !=0 || initio_IrRight() !=0");
+        REQUIRE(func->toCode() == "(initio_IrLeft() !=0 || initio_IrRight() !=0)");
 
         ident = new Identifier("Stop");
         func = new BuiltInFunction(ident);

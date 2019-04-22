@@ -44,7 +44,7 @@ BuiltInFunction::BuiltInFunction(Identifier *functionName)
 {
     if(functionName->toCode() == "ObstacleDetected")
     {
-        this->expression = "initio_IrLeft() !=0 || initio_IrRight() !=0";
+        this->expression = "(initio_IrLeft() !=0 || initio_IrRight() !=0)";
     }
     else if (functionName->toCode() == "Stop") 
     {

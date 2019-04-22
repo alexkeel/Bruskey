@@ -9,3 +9,6 @@ indent -st -bap -bli0 -i4 -l79 -ncs -npcs -npsl -fca -lc79 -fc1 -ts4 testOutput.
 
 cd ../../Test/
 ./Tests
+
+cp build/Components/Compiler/Compiler /usr/bin/Brusky
+
