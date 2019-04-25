@@ -357,7 +357,6 @@ void MainWindow::run()
     process.waitForFinished();
     // Format C File
     process.setStandardOutputFile("output_formatted.c");
-    //process.setStandardInputFile("output.c");
     QStringList arguments;
     arguments << "-st" << "-bap" << "-bli0" << "-i4" << "-l79" << "-ncs" << "-npsl" << "-fca" << "-lc79" << "-ts4" << "output.c";
     process.start("indent", arguments);

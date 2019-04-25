@@ -7,6 +7,7 @@
   <script src="google-blockly/blocks_compressed.js"></script>
   <script src="google-blockly/msg/js/en.js"></script>
   <script src="google-blockly/blocks/bruskey.js"></script>
+  <script src="google-blockly/generators/bruskey.js"></script>
   <style>
     html, body {
       height: 100%;
@@ -31,6 +32,11 @@
   </style>
 </head>
 <body>
+  <p>
+    <button onclick="showCode()">Show JavaScript</button>
+    <button onclick="runCode()">Run JavaScript</button>
+  </p>
+
   <table>
     <tr>
       <td id="blocklyArea">
@@ -220,16 +226,34 @@
     window.addEventListener('resize', onresize, false);
     onresize();
     Blockly.svgResize(demoWorkspace);
-  </script>
 
-  <script>
     // Update this with brusky functions
     function updateCode(event)
     {
-      var code = Blockly.JavaScript.workspaceToCode(workspace);
-      docuemnt.getElementById('textarea').value = code;
+      var code = Blockly.Bruskey.workspaceToCode(demoWorkspace);
+      document.getElementById('textarea').value = code;
     }
-    workspace.addChangeListener(updateCode);
+    demoWorkspace.addChangeListener(updateCode);
+
+    function showCode() {
+      // Generate Bruskey code and display it.
+      Blockly.Bruskey.INFINITE_LOOP_TRAP = null;
+      var code = Blockly.Bruskey.workspaceToCode(demoWorkspace);
+      alert(code);
+    }
+
+    function runCode() {
+      var code = Blockly.Bruskey.workspaceToCode(demoWorkspace);
+      var a = window.document.createElement('a');
+      a.href = window.URL.createObjectURL(new Blob([code],{type: 'text/csv'}));
+      a.download = 'TEST.txt'
+
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+    }
+
   </script>
 </body>
 </html>
