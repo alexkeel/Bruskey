@@ -31,28 +31,41 @@ Blockly.Bruskey.addReservedWords(
  * Order of operation ENUMs.
  * http://docs.python.org/reference/expressions.html#summary
  */
-Blockly.Bruskey.ORDER_ATOMIC = 0;            // 0 "" ...
-Blockly.Bruskey.ORDER_COLLECTION = 1;        // tuples, lists, dictionaries
-Blockly.Bruskey.ORDER_STRING_CONVERSION = 1; // `expression...`
-Blockly.Bruskey.ORDER_MEMBER = 2.1;          // . []
-Blockly.Bruskey.ORDER_FUNCTION_CALL = 2.2;   // ()
-Blockly.Bruskey.ORDER_EXPONENTIATION = 3;    // **
-Blockly.Bruskey.ORDER_UNARY_SIGN = 4;        // + -
-Blockly.Bruskey.ORDER_BITWISE_NOT = 4;       // ~
-Blockly.Bruskey.ORDER_MULTIPLICATIVE = 5;    // * / // %
-Blockly.Bruskey.ORDER_ADDITIVE = 6;          // + -
-Blockly.Bruskey.ORDER_BITWISE_SHIFT = 7;     // << >>
-Blockly.Bruskey.ORDER_BITWISE_AND = 8;       // &
-Blockly.Bruskey.ORDER_BITWISE_XOR = 9;       // ^
-Blockly.Bruskey.ORDER_BITWISE_OR = 10;       // |
-Blockly.Bruskey.ORDER_RELATIONAL = 11;       // in, not in, is, is not,
-                                            //     <, <=, >, >=, <>, !=, ==
-Blockly.Bruskey.ORDER_LOGICAL_NOT = 12;      // not
-Blockly.Bruskey.ORDER_LOGICAL_AND = 13;      // and
-Blockly.Bruskey.ORDER_LOGICAL_OR = 14;       // or
-Blockly.Bruskey.ORDER_CONDITIONAL = 15;      // if else
-Blockly.Bruskey.ORDER_LAMBDA = 16;           // lambda
-Blockly.Bruskey.ORDER_NONE = 99;             // (...)
+Blockly.Bruskey.ORDER_ATOMIC = 0;           // 0 "" ...
+Blockly.Bruskey.ORDER_NEW = 1.1;            // new
+Blockly.Bruskey.ORDER_MEMBER = 1.2;         // . []
+Blockly.Bruskey.ORDER_FUNCTION_CALL = 2;    // ()
+Blockly.Bruskey.ORDER_INCREMENT = 3;        // ++
+Blockly.Bruskey.ORDER_DECREMENT = 3;        // --
+Blockly.Bruskey.ORDER_BITWISE_NOT = 4.1;    // ~
+Blockly.Bruskey.ORDER_UNARY_PLUS = 4.2;     // +
+Blockly.Bruskey.ORDER_UNARY_NEGATION = 4.3; // -
+Blockly.Bruskey.ORDER_LOGICAL_NOT = 4.4;    // !
+Blockly.Bruskey.ORDER_TYPEOF = 4.5;         // typeof
+Blockly.Bruskey.ORDER_VOID = 4.6;           // void
+Blockly.Bruskey.ORDER_DELETE = 4.7;         // delete
+Blockly.Bruskey.ORDER_AWAIT = 4.8;          // await
+Blockly.Bruskey.ORDER_EXPONENTIATION = 5.0; // **
+Blockly.Bruskey.ORDER_MULTIPLICATION = 5.1; // *
+Blockly.Bruskey.ORDER_DIVISION = 5.2;       // /
+Blockly.Bruskey.ORDER_MODULUS = 5.3;        // %
+Blockly.Bruskey.ORDER_SUBTRACTION = 6.1;    // -
+Blockly.Bruskey.ORDER_ADDITION = 6.2;       // +
+Blockly.Bruskey.ORDER_BITWISE_SHIFT = 7;    // << >> >>>
+Blockly.Bruskey.ORDER_RELATIONAL = 8;       // < <= > >=
+Blockly.Bruskey.ORDER_IN = 8;               // in
+Blockly.Bruskey.ORDER_INSTANCEOF = 8;       // instanceof
+Blockly.Bruskey.ORDER_EQUALITY = 9;         // == != === !==
+Blockly.Bruskey.ORDER_BITWISE_AND = 10;     // &
+Blockly.Bruskey.ORDER_BITWISE_XOR = 11;     // ^
+Blockly.Bruskey.ORDER_BITWISE_OR = 12;      // |
+Blockly.Bruskey.ORDER_LOGICAL_AND = 13;     // &&
+Blockly.Bruskey.ORDER_LOGICAL_OR = 14;      // ||
+Blockly.Bruskey.ORDER_CONDITIONAL = 15;     // ?:
+Blockly.Bruskey.ORDER_ASSIGNMENT = 16;      // = += -= **= *= /= %= <<= >>= ...
+Blockly.Bruskey.ORDER_YIELD = 17;         // yield
+Blockly.Bruskey.ORDER_COMMA = 18;           // ,
+Blockly.Bruskey.ORDER_NONE = 99;            // (...)
 
 /**
  * List of outer-inner pairings that do NOT require parentheses.
@@ -98,25 +111,25 @@ Blockly.Bruskey.init = function(workspace) {
   } else {
     Blockly.Bruskey.variableDB_.reset();
   }
-
   Blockly.Bruskey.variableDB_.setVariableMap(workspace.getVariableMap());
+};
 
-  var defvars = [];
-  // Add developer variables (not created or named by the user).
-  var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-  for (var i = 0; i < devVarList.length; i++) {
-    defvars.push(Blockly.Bruskey.variableDB_.getName(devVarList[i],
-        Blockly.Names.DEVELOPER_VARIABLE_TYPE) + ' = None');
+/**
+ * Prepend the generated code with the variable definitions.
+ * @param {string} code Generated code.
+ * @return {string} Completed code.
+ */
+Blockly.Bruskey.finish = function(code) {
+  // Convert the definitions dictionary into a list.
+  var definitions = [];
+  for (var name in Blockly.Bruskey.definitions_) {
+    definitions.push(Blockly.Bruskey.definitions_[name]);
   }
-
-  // Add user variables, but only ones that are being used.
-  var variables = Blockly.Variables.allUsedVarModels(workspace);
-  for (var i = 0; i < variables.length; i++) {
-    defvars.push(Blockly.Bruskey.variableDB_.getName(variables[i].getId(),
-        Blockly.Variables.NAME_TYPE) + ' = None');
-  }
-
-  Blockly.Bruskey.definitions_['variables'] = defvars.join('\n');
+  // Clean up temporary data.
+  delete Blockly.Bruskey.definitions_;
+  delete Blockly.Bruskey.functionNames_;
+  Blockly.Bruskey.variableDB_.reset();
+  return definitions.join('\n\n') + '\n\n\n' + code;
 };
 
 /**
@@ -172,7 +185,7 @@ Blockly.Bruskey.scrub_ = function(block, code, opt_thisOnly) {
     if (comment) {
       if (block.getProcedureDef) {
         // Use a comment block for function comments.
-        commentCode += '"""' + comment + '\n"""\n';
+        commentCode += '\\\\ ' + comment + "\n";
       } else {
         commentCode += Blockly.Bruskey.prefixLines(comment + '\n', '// ');
       }
@@ -795,4 +808,219 @@ Blockly.Bruskey['math_atan2'] = function(block) {
       Blockly.Bruskey.ORDER_COMMA) || '0';
   return ['Math.atan2(' + argument1 + ', ' + argument0 + ') / Math.PI * 180',
       Blockly.Bruskey.ORDER_DIVISION];
+};
+
+// VARIABLES
+
+Blockly.Bruskey['variables_get'] = function(block) {
+  // Variable getter.
+  var code = Blockly.Bruskey.variableDB_.getName(block.getFieldValue('VAR'),
+      Blockly.Variables.NAME_TYPE);
+  return [code, Blockly.Bruskey.ORDER_ATOMIC];
+};
+
+Blockly.Bruskey['variables_set'] = function(block) {
+  // Variable setter.
+  var argument0 = Blockly.Bruskey.valueToCode(block, 'VALUE',
+      Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
+  var varName = Blockly.Bruskey.variableDB_.getName(
+      block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
+  return varName + ' = ' + argument0 + '\n';
+};
+
+Blockly.Bruskey['variables_get_dynamic'] = Blockly.Bruskey['variables_get'];
+Blockly.Bruskey['variables_set_dynamic'] = Blockly.Bruskey['variables_set'];
+
+// PROCEDURES
+
+Blockly.Bruskey['procedures_defreturn'] = function(block) {
+  // Define a procedure with a return value.
+  var funcName = Blockly.Bruskey.variableDB_.getName(
+      block.getFieldValue('NAME'), Blockly.Procedures.NAME_TYPE);
+  var branch = Blockly.Bruskey.statementToCode(block, 'STACK');
+  if (Blockly.Bruskey.STATEMENT_PREFIX) {
+    var id = block.id.replace(/\$/g, '$$$$');  // Issue 251.
+    branch = Blockly.Bruskey.prefixLines(
+        Blockly.Bruskey.STATEMENT_PREFIX.replace(/%1/g,
+        '\'' + id + '\''), Blockly.Bruskey.INDENT) + branch;
+  }
+  if (Blockly.Bruskey.INFINITE_LOOP_TRAP) {
+    branch = Blockly.Bruskey.INFINITE_LOOP_TRAP.replace(/%1/g,
+        '\'' + block.id + '\'') + branch;
+  }
+  var returnValue = Blockly.Bruskey.valueToCode(block, 'RETURN',
+      Blockly.Bruskey.ORDER_NONE) || '';
+  if (returnValue) {
+    returnValue = Blockly.Bruskey.INDENT + 'return ' + returnValue + ';\n';
+  }
+  var args = [];
+  for (var i = 0; i < block.arguments_.length; i++) {
+    args[i] = Blockly.Bruskey.variableDB_.getName(block.arguments_[i],
+        Blockly.Variables.NAME_TYPE);
+  }
+  var code = 'function ' + funcName + '(' + args.join(', ') + '): \n' +
+      branch + returnValue + 'end';
+  code = Blockly.Bruskey.scrub_(block, code);
+  // Add % so as not to collide with helper functions in definitions list.
+  Blockly.Bruskey.definitions_['%' + funcName] = code;
+  return null;
+};
+
+// Defining a procedure without a return value uses the same generator as
+// a procedure with a return value.
+Blockly.Bruskey['procedures_defnoreturn'] =
+    Blockly.Bruskey['procedures_defreturn'];
+
+Blockly.Bruskey['procedures_callreturn'] = function(block) {
+  // Call a procedure with a return value.
+  var funcName = Blockly.Bruskey.variableDB_.getName(
+      block.getFieldValue('NAME'), Blockly.Procedures.NAME_TYPE);
+  var args = [];
+  for (var i = 0; i < block.arguments_.length; i++) {
+    args[i] = Blockly.Bruskey.valueToCode(block, 'ARG' + i,
+        Blockly.Bruskey.ORDER_COMMA) || 'null';
+  }
+  var code = funcName + '(' + args.join(', ') + ')';
+  return [code, Blockly.Bruskey.ORDER_FUNCTION_CALL];
+};
+
+Blockly.Bruskey['procedures_callnoreturn'] = function(block) {
+  // Call a procedure with no return value.
+  var funcName = Blockly.Bruskey.variableDB_.getName(
+      block.getFieldValue('NAME'), Blockly.Procedures.NAME_TYPE);
+  var args = [];
+  for (var i = 0; i < block.arguments_.length; i++) {
+    args[i] = Blockly.Bruskey.valueToCode(block, 'ARG' + i,
+        Blockly.Bruskey.ORDER_COMMA) || 'null';
+  }
+  var code = funcName + '(' + args.join(', ') + ')\n';
+  return code;
+};
+
+Blockly.Bruskey['procedures_ifreturn'] = function(block) {
+  // Conditionally return value from a procedure.
+  var condition = Blockly.Bruskey.valueToCode(block, 'CONDITION',
+      Blockly.Bruskey.ORDER_NONE) || 'false';
+  var code = 'if (' + condition + '):\n';
+  if (block.hasReturnValue_) {
+    var value = Blockly.Bruskey.valueToCode(block, 'VALUE',
+        Blockly.Bruskey.ORDER_NONE) || 'null';
+    code += Blockly.Bruskey.INDENT + 'return ' + value + ';\n';
+  } else {
+    code += Blockly.Bruskey.INDENT + 'return;\n';
+  }
+  code += 'end\n';
+  return code;
+};
+
+// LOOPS
+
+Blockly.Bruskey['controls_repeat_ext'] = function(block) {
+  // Repeat n times.
+  if (block.getField('TIMES')) {
+    // Internal number.
+    var repeats = String(Number(block.getFieldValue('TIMES')));
+  } else {
+    // External number.
+    var repeats = Blockly.Bruskey.valueToCode(block, 'TIMES',
+        Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
+  }
+  var branch = Blockly.Bruskey.statementToCode(block, 'DO');
+  branch = Blockly.Bruskey.addLoopTrap(branch, block.id);
+  var code = '';
+  var loopVar = Blockly.Bruskey.variableDB_.getDistinctName(
+      'count', Blockly.Variables.NAME_TYPE);
+  var endVar = repeats;
+  if (!repeats.match(/^\w+$/) && !Blockly.isNumber(repeats)) {
+    var endVar = Blockly.Bruskey.variableDB_.getDistinctName(
+        'repeat_end', Blockly.Variables.NAME_TYPE);
+    code += 'var ' + endVar + ' = ' + repeats + ';\n';
+  }
+  code += 'for (var ' + loopVar + ' = 0; ' +
+      loopVar + ' < ' + endVar + '; ' +
+      loopVar + '++) {\n' +
+      branch + '}\n';
+  return code;
+};
+
+Blockly.Bruskey['controls_repeat'] =
+    Blockly.Bruskey['controls_repeat_ext'];
+
+Blockly.Bruskey['controls_whileUntil'] = function(block) {
+  // Do while/until loop.
+  var until = block.getFieldValue('MODE') == 'UNTIL';
+  var argument0 = Blockly.Bruskey.valueToCode(block, 'BOOL',
+      until ? Blockly.Bruskey.ORDER_LOGICAL_NOT :
+      Blockly.Bruskey.ORDER_NONE) || 'false';
+  var branch = Blockly.Bruskey.statementToCode(block, 'DO');
+  branch = Blockly.Bruskey.addLoopTrap(branch, block.id);
+  if (until) {
+    argument0 = '!' + argument0;
+  }
+  return 'while ' + argument0 + ': \n' + branch + 'end\n';
+};
+
+Blockly.Bruskey['controls_for'] = function(block) {
+  // For loop.
+  var variable0 = Blockly.Bruskey.variableDB_.getName(
+      block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
+  var argument0 = Blockly.Bruskey.valueToCode(block, 'FROM',
+      Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
+  var argument1 = Blockly.Bruskey.valueToCode(block, 'TO',
+      Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
+  var increment = Blockly.Bruskey.valueToCode(block, 'BY',
+      Blockly.Bruskey.ORDER_ASSIGNMENT) || '1';
+  var branch = Blockly.Bruskey.statementToCode(block, 'DO');
+  branch = Blockly.Bruskey.addLoopTrap(branch, block.id);
+  var code;
+  if (Blockly.isNumber(argument0) && Blockly.isNumber(argument1) &&
+      Blockly.isNumber(increment)) {
+    // All arguments are simple numbers.
+    var up = parseFloat(argument0) <= parseFloat(argument1);
+    code = 'for (' + variable0 + ' = ' + argument0 + '; ' +
+        variable0 + (up ? ' <= ' : ' >= ') + argument1 + '; ' +
+        variable0;
+    var step = Math.abs(parseFloat(increment));
+    if (step == 1) {
+      code += up ? '++' : '--';
+    } else {
+      code += (up ? ' += ' : ' -= ') + step;
+    }
+    code += ') {\n' + branch + '}\n';
+  } else {
+    code = '';
+    // Cache non-trivial values to variables to prevent repeated look-ups.
+    var startVar = argument0;
+    if (!argument0.match(/^\w+$/) && !Blockly.isNumber(argument0)) {
+      startVar = Blockly.Bruskey.variableDB_.getDistinctName(
+          variable0 + '_start', Blockly.Variables.NAME_TYPE);
+      code += 'var ' + startVar + ' = ' + argument0 + ';\n';
+    }
+    var endVar = argument1;
+    if (!argument1.match(/^\w+$/) && !Blockly.isNumber(argument1)) {
+      var endVar = Blockly.Bruskey.variableDB_.getDistinctName(
+          variable0 + '_end', Blockly.Variables.NAME_TYPE);
+      code += 'var ' + endVar + ' = ' + argument1 + ';\n';
+    }
+    // Determine loop direction at start, in case one of the bounds
+    // changes during loop execution.
+    var incVar = Blockly.Bruskey.variableDB_.getDistinctName(
+        variable0 + '_inc', Blockly.Variables.NAME_TYPE);
+    code += 'var ' + incVar + ' = ';
+    if (Blockly.isNumber(increment)) {
+      code += Math.abs(increment) + ';\n';
+    } else {
+      code += 'Math.abs(' + increment + ');\n';
+    }
+    code += 'if (' + startVar + ' > ' + endVar + ') {\n';
+    code += Blockly.Bruskey.INDENT + incVar + ' = -' + incVar + ';\n';
+    code += '}\n';
+    code += 'for (' + variable0 + ' = ' + startVar + '; ' +
+        incVar + ' >= 0 ? ' +
+        variable0 + ' <= ' + endVar + ' : ' +
+        variable0 + ' >= ' + endVar + '; ' +
+        variable0 + ' += ' + incVar + ') {\n' +
+        branch + '}\n';
+  }
+  return code;
 };
