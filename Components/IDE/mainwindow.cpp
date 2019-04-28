@@ -5,9 +5,9 @@ MainWindow::MainWindow()
 {
     setupEditor();
 
+    setCurrentFile(QString());
     // Add tabs and sets them as the central widget
     this->setupTabs();
-
     createActions();
     createStatusBar();
 
@@ -20,7 +20,6 @@ MainWindow::MainWindow()
         connect(qApp, &QGuiApplication::commitDataRequest, this, &MainWindow::commitData);
     #endif
 
-    setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 }
 
@@ -36,10 +35,12 @@ void MainWindow::setupTabs()
     tabs->setTabPosition(QTabWidget::South);
 
     // Add text edit to "blockly" tab, this will appear when the "code" tab is selected
-    this->blockly = new Blockly(this);
+    this->blockly = new Blockly(this, this->curFile);
+
     blocklyTab->setLayout(new QVBoxLayout());
     blocklyTab->layout()->addWidget(this->blockly->getWebView());
     blocklyTab->setLayout(blocklyTab->layout());
+    connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 
     // Add text edit to "code" tab, this will appear when the "code" tab is selected
     codeTab->setLayout(new QVBoxLayout());
@@ -48,6 +49,14 @@ void MainWindow::setupTabs()
 
     this->setCentralWidget(tabs);
     this->setLayout(this->layout());
+}
+
+void MainWindow::onTabChanged(int tabIndex)
+{
+    if(tabIndex == 0)
+    {
+        this->loadFile(*curFile);
+    }
 }
 
 void MainWindow::setupEditor()
@@ -105,13 +114,13 @@ void MainWindow::open()
 
 bool MainWindow::save()
 {
-    if(curFile.isEmpty())
+    if(curFile->isEmpty())
     {
         return saveAs();
     }
     else
     {
-        return saveFile(curFile);
+        return saveFile(*curFile);
     }
 }
 
@@ -329,12 +338,12 @@ bool MainWindow::saveFile(const QString &fileName)
 
 bool MainWindow::setCurrentFile(const QString &fileName)
 {
-    curFile = fileName;
+    curFile = new QString(fileName);
     textEdit->document()->setModified(false);
     setWindowModified(false);
 
-    QString shownName = curFile;
-    if(curFile.isEmpty())
+    QString shownName = *curFile;
+    if(curFile->isEmpty())
     {
         shownName = "untitled.txt";
     }
@@ -352,7 +361,7 @@ void MainWindow::run()
     // Generate C file
     QProcess process;
     process.setStandardOutputFile("output.c");
-    process.setStandardInputFile(curFile);
+    process.setStandardInputFile(*curFile);
     process.start("Brusky");
     process.waitForFinished();
     // Format C File

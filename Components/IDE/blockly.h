@@ -7,15 +7,22 @@
 #include <QtWebEngine/QtWebEngine>
 #include <QtWebEngineWidgets/QWebEngineView>
 
-class Blockly
+class Blockly : public QObject
 {
+    Q_OBJECT
+
 public:
-    Blockly(QMainWindow* parent);
+    Blockly(QMainWindow* parent, QString* textEditor);
 
     QWebEngineView* getWebView();
 
+private slots:
+    void downloadRequested(QWebEngineDownloadItem* item);
+
 private:
+    QString *textEditor;
     QWebEngineView *view;
+    QMainWindow *parent;
 };
 
 #endif // BLOCKLY_H

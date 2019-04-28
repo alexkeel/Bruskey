@@ -27,6 +27,7 @@ private slots:
     void run();
     void about();
     void documentWasModified();
+    void onTabChanged(int tabIndex);
     #ifndef QT_NO_SESSIONMANAGER
         void commitData(QSessionManager &);
     #endif
@@ -47,7 +48,7 @@ private:
 
     Blockly *blockly;
     QPlainTextEdit *textEdit;
-    QString curFile;
+    QString *curFile;
     Highlighter *highlighter;
 
 };
