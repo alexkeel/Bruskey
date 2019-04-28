@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/Compiler.dir/main.cpp.o CMakeFiles/Compiler.dir/parser.tab.cpp.o CMakeFiles/Compiler.dir/lexer.cpp.o  -o Compiler ../SyntaxTree/libSyntaxTree.a 

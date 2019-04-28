@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+6aa616bbe8e0ba1b08b127872d1a1734 Components/Compiler/lexer.cpp
+c5d8221cb07caf9334a83dd751cd5147 Components/Compiler/parser.tab.cpp

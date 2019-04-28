@@ -50,15 +50,15 @@ void yyerror(char const *);
     VariableDeclaration *varDclr;
 }
 
-%token GREATERTHANOREQUAL LESSTHANOREQUAL EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS TYPE
+%token GREATERTHANOREQUAL LESSTHANOREQUAL EQUALITYOP AND DOT OR SUB ADD MINUS MUL DIV MOD INTCONST COMMA LEFTPAREN RIGHTPAREN END COLON LESSTHAN GREATERTHAN TRUE FALSE IF ELSE FUNCTIONSTATEMENT WHILE NOT BUILTINTYPE BUILTINFUNCTION IDENTIFIER EQUALS TYPE STRING FLOAT CHAR
 
 // Terminals
-%type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS 
+%type <string> IDENTIFIER INTCONST ADD SUB DIV MUL MOD EQUALITYOP EQUALS STRING FLOAT CHAR
 
 // Non terminals
 %type <stmt>            statement 
 %type <integer>         constant 
-%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction lessMoreThanOp andOrOp type
+%type <ident>           identifier multDivRemOp addSubOp eqalityOp equalsOp builtInType builtInFunction lessMoreThanOp andOrOp type stringLiteral charValue floatingPoint
 %type <expr>            primaryExpression postfixExpression expression addSubExpression multDivRemExpression notEqualsExpression equalityExpression assignmentExpression lessMoreThanExpression parenthesesExpression andOrExpression assignment
 %type <exprList>        argumentExpressionList postfixExpression2 
 %type <elseIfStmtList>  elseIfStatementList
@@ -96,6 +96,7 @@ statement:
 variableDeclaration:
     type identifier assignment                                                  {$$ = new VariableDeclaration($1, $2, $3);}
 |   type identifier                                                             {$$ = new VariableDeclaration($1, $2);}
+|   identifier assignment                                                       {$$ = new VariableDeclaration($1, $2);}
 ;
 
 type:
@@ -145,6 +146,9 @@ expression:
 
 assignment:
     EQUALS constant                                                             {$$ = $2;}
+|   EQUALS stringLiteral                                                        {$$ = $2;} 
+|   EQUALS charValue                                                            {$$ = $2;} 
+|   EQUALS floatingPoint                                                        {$$ = $2;} 
 ;
 
 builtInFunctionCall:
@@ -251,6 +255,18 @@ primaryExpression:
 |   identifier                                                                  {$$ = $1;}
 |   constant                                                                    {$$ = $1;}
 |   LEFTPAREN primaryExpression RIGHTPAREN                                      {$$ = $2;}
+;
+
+charValue:
+    CHAR                                                                        {$$ = new Identifier(yytext);}
+;
+
+floatingPoint:
+    FLOAT                                                                       {$$ = new Identifier(yytext);}
+;
+
+stringLiteral:
+    STRING                                                                      {$$ = new Identifier(yytext);}
 ;
 
 constant:

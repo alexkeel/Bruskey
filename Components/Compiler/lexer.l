@@ -45,6 +45,8 @@ ExponentPart ([eE][+-]?[0-9]+)
 FloatingSuffix ([flFL])
 IntegerSuffix ([uU][lL]|[lL][uU]|[uUlL])
 
+FloatingPoint (^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$)
+
 DecimalConstant ([1-9][0-9]*)
 OctalConstant ([0][0-7]*)
 HexConstant ([0][xX][0-9A-Fa-f]+)
@@ -98,6 +100,10 @@ end                 {return END;}
 {Type}              {return TYPE;}
 {BuiltInType}       {return BUILTINTYPE;}
 {BuiltInFunction}   {return BUILTINFUNCTION;}
+
+{StringLiteral}     {return STRING;}
+{FloatingPoint}     {return FLOAT;}
+{CharConstant}      {return CHAR;}
 
 {Identifier}        {return IDENTIFIER;}
 
