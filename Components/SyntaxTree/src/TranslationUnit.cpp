@@ -75,7 +75,7 @@ void *worker(void *p_thread_dat)
     return NULL;
 }
 
-void camcar(int argc, char *argv[], struct thread_dat *ptdat) 
+void userDefined(int argc, char *argv[], struct thread_dat *ptdat) 
 {
 )";
     for(int x = 0; x < this->statementList.size(); x++)
@@ -111,7 +111,7 @@ int main (int argc, char *argv[])
     // Listener loop started on seperate thread
     pthread_create(&cam_thread, NULL, worker, &tdat);
 
-    camcar(argc, argv, &tdat);    
+    userDefined(argc, argv, &tdat);    
 
     tdat.bExit = 1;               
 

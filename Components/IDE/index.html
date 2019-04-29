@@ -32,11 +32,6 @@
   </style>
 </head>
 <body>
-  <p>
-    <button onclick="showCode()">Show</button>
-    <button onclick="runCode()">Save</button>
-  </p>
-
   <table>
     <tr>
       <td id="blocklyArea">
@@ -230,8 +225,18 @@
     // Update this with brusky functions
     function updateCode(event)
     {
-      var code = Blockly.Bruskey.workspaceToCode(demoWorkspace);
-      document.getElementById('textarea').value = code;
+      if(event.type == Blockly.Events.BLOCK_CREATE)
+      {
+        var code = Blockly.Bruskey.workspaceToCode(demoWorkspace);
+        var a = window.document.createElement('a');
+        a.href = window.URL.createObjectURL(new Blob([code],{type: 'text/csv'}));
+        a.download = 'TEST.txt'
+
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+      }
     }
     demoWorkspace.addChangeListener(updateCode);
 
