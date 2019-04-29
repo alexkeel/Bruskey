@@ -55,7 +55,10 @@ void MainWindow::onTabChanged(int tabIndex)
 {
     if(tabIndex == 0)
     {
-        this->loadFile(*curFile);
+        if(!curFile->isEmpty())
+        {
+            this->loadFile(*curFile);
+        }
     }
 }
 

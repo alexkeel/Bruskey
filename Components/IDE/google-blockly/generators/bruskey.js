@@ -260,16 +260,16 @@ Blockly.Bruskey['controls_if'] = function(block) {
     conditionCode = Blockly.Bruskey.valueToCode(block, 'IF' + n,
       Blockly.Bruskey.ORDER_NONE) || 'false';
     branchCode = Blockly.Bruskey.statementToCode(block, 'DO' + n);
-    code += (n == 0 ? 'if' : 'else if') + ' ' + conditionCode + ': \n' + branchCode + 'end';
+    code += (n == 0 ? 'if' : 'else if') + ' ' + conditionCode + ': \n' + branchCode;
 
     ++n;
   } while (block.getInput('IF' + n));
 
   if (block.getInput('ELSE')) {
     branchCode = Blockly.Bruskey.statementToCode(block, 'ELSE');
-    code += ' else: \n' + branchCode + 'end';
+    code += 'else: \n' + branchCode;
   }
-  return code + '\n';
+  return code + 'end\n';
 };
 
 Blockly.Bruskey['controls_ifelse'] = Blockly.Bruskey['controls_if'];
@@ -387,32 +387,37 @@ Blockly.Bruskey['initio_pause'] = function(block) {
 
 Blockly.Bruskey['initio_leftlinedetected'] = function(block) {
   // Print statement.
-  return 'Robot.Pause(' + msg + ')\n';
+  return ['Robot.leftLineDetected()', Blockly.Bruskey.ORDER_FUNCTION_CALL];
 };
 
 Blockly.Bruskey['initio_rightlinedetected'] = function(block) {
   // Print statement.
-  return 'Robot.Pause(' + msg + ')\n';
+  return ['Robot.rightLineDetected()', Blockly.Bruskey.ORDER_FUNCTION_CALL];
 };
+
 Blockly.Bruskey['initio_getblobhalignment'] = function(block) {
   // Print statement.
-  return 'Robot.Pause(' + msg + ')\n';
+  return ['Robot.getBlobHAlignment()', Blockly.Bruskey.ORDER_FUNCTION_CALL];
 };
+
 Blockly.Bruskey['initio_stop'] = function(block) {
   // Print statement.
-  return 'Robot.Pause(' + msg + ')\n';
+  return ['Robot.Stop()', Blockly.Bruskey.ORDER_FUNCTION_CALL];
 };
+
 Blockly.Bruskey['initio_obstacledetected'] = function(block) {
   // Print statement.
-  return 'Robot.Pause(' + msg + ')\n';
+  return ['Robot.obstacleDetected()', Blockly.Bruskey.ORDER_FUNCTION_CALL];
 };
+
 Blockly.Bruskey['initio_getdistance'] = function(block) {
   // Print statement.
-  return 'Robot.Pause(' + msg + ')\n';
+  return ['Robot.getDistance()', Blockly.Bruskey.ORDER_FUNCTION_CALL];
 };
+
 Blockly.Bruskey['initio_blobvisible'] = function(block) {
   // Print statement.
-  return 'Robot.Pause(' + msg + ')\n';
+  return ['Robot.blobVisible()', Blockly.Bruskey.ORDER_FUNCTION_CALL];
 };
 
 // MATHS
