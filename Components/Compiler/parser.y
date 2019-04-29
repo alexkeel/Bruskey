@@ -254,6 +254,9 @@ primaryExpression:
     builtInFunctionCall                                                         {$$ = $1;}
 |   identifier                                                                  {$$ = $1;}
 |   constant                                                                    {$$ = $1;}
+|   charValue                                                                   {$$ = $1;}
+|   floatingPoint                                                               {$$ = $1;}
+|   stringLiteral                                                               {$$ = $1;}
 |   LEFTPAREN primaryExpression RIGHTPAREN                                      {$$ = $2;}
 ;
 

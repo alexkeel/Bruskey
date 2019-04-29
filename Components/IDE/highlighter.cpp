@@ -31,6 +31,12 @@ Highlighter::Highlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
     rule.format = builtInFunctionFormat;
     highlightingRules.append(rule);
 
+    charFormat.setForeground((Qt::magenta));
+    charFormat.setFontItalic(true);
+    rule.pattern = QRegularExpression("'[^'].*'");
+    rule.format = charFormat;
+    highlightingRules.append(rule);
+
     singleLineCommentFormat.setForeground(Qt::red);
     singleLineCommentFormat.setFontWeight(QFont::Bold);
     rule.pattern = QRegularExpression("\/\/.+");

@@ -7,6 +7,7 @@
 #include <string>
 #include <regex>
 #include <vector>
+#include <map>
 
 class VariableDeclaration : public Statement
 {
@@ -26,6 +27,8 @@ public:
 
 private:
     std::string statement;
+
+    static std::map<std::string, bool> definedVariables;
 
     // Regular expressions
     std::regex intRegex;
