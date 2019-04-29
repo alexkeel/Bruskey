@@ -8,6 +8,7 @@ std::map<std::string, bool> VariableDeclaration::definedVariables;
 
 VariableDeclaration::VariableDeclaration(Identifier *type, Identifier *ident)
 {
+    this->statement = type->toCode() + " " + ident->toCode() + ";";
     // Add new variable to map if it doesnt exist, otherwise do nothing as it is a redefined variable
     if(definedVariables.find(ident->toCode()) == definedVariables.end())
     {
