@@ -353,35 +353,35 @@ Blockly.Bruskey['logic_ternary'] = function(block) {
 Blockly.Bruskey['initio_driveforward'] = function(block) {
   // Print statement.
   var msg = Blockly.Bruskey.valueToCode(block, 'DriveForward',
-      Blockly.Bruskey.ORDER_NONE);
+  Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
   return 'Robot.DriveForward(' + msg + ')\n';
 };
 
 Blockly.Bruskey['initio_drivebackward'] = function(block) {
   // Print statement.
   var msg = Blockly.Bruskey.valueToCode(block, 'DriveBackward',
-      Blockly.Bruskey.ORDER_NONE);
+  Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
   return 'Robot.DriveBackward(' + msg + ')\n';
 };
 
 Blockly.Bruskey['initio_spinright'] = function(block) {
   // Print statement.
   var msg = Blockly.Bruskey.valueToCode(block, 'SpinRight',
-      Blockly.Bruskey.ORDER_NONE);
+  Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
   return 'Robot.SpinRight(' + msg + ')\n';
 };
 
 Blockly.Bruskey['initio_spinleft'] = function(block) {
   // Print statement.
   var msg = Blockly.Bruskey.valueToCode(block, 'SpinLeft',
-      Blockly.Bruskey.ORDER_NONE);
+  Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
   return 'Robot.SpinLeft(' + msg + ')\n';
 };
 
 Blockly.Bruskey['initio_pause'] = function(block) {
   // Print statement.
   var msg = Blockly.Bruskey.valueToCode(block, 'Pause',
-      Blockly.Bruskey.ORDER_NONE);
+  Blockly.Bruskey.ORDER_ASSIGNMENT) || '0';
   return 'Robot.Pause(' + msg + ')\n';
 };
 

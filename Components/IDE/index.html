@@ -31,7 +31,8 @@
     }
   </style>
 </head>
-<body> 
+<body>
+    
 
   <table>
     <tr>
@@ -226,7 +227,7 @@
     // Update this with brusky functions
     function updateCode(event)
     {
-      if(event.type == Blockly.Events.BLOCK_MOVE)
+      if(event.type == Blockly.Events.BLOCK_MOVE || event.type == Blockly.Events.BLOCK_CHANGE)
       {
         var code = Blockly.Bruskey.workspaceToCode(demoWorkspace);
         var a = window.document.createElement('a');
