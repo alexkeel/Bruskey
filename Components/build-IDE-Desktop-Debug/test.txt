@@ -1,0 +1,14 @@
+while true:
+  if Robot.obstacleDetected():
+    Robot.Stop()end
+  if Robot.leftLineDetected() or Robot.rightLineDetected():
+    Robot.DriveForward(50)
+  else:
+    Robot.SpinRight(50)
+  end
+  if Robot.getBlobHAlignment() > 50:
+    Robot.DriveForward(50)
+  else if Robot.getBlobHAlignment() < 50:
+    Robot.DriveBackward(50)
+  end
+end

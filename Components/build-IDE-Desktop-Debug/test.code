@@ -1,0 +1,9 @@
+while true:
+  if Robot.leftLineDetected()
+  :
+    Robot.SpinLeft(50)
+  else if Robot.rightLineDetected()
+  :
+    Robot.SpinRight(50)
+  end
+end
