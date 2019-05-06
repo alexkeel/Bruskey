@@ -27,7 +27,7 @@ Highlighter::Highlighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
 
     builtInFunctionFormat.setForeground(Qt::darkRed);
     builtInFunctionFormat.setFontItalic(true);
-    rule.pattern = QRegularExpression("Robot\\.*(ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause|GetBlobHAlignment|GetDistance)+\\(([\\w,]*)\\)");
+    rule.pattern = QRegularExpression("Robot\\.*(ObstacleDetected|Stop|BlobVisible|SpinLeft|SpinRight|DriveForward|DriveBackward|Pause|GetBlobHAlignment|GetDistance|LeftLineDetected|RightLineDetected)+\\(([\\w,]*)\\)");
     rule.format = builtInFunctionFormat;
     highlightingRules.append(rule);
 

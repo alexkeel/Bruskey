@@ -32,18 +32,23 @@ int carBlobAligned;
 int distance;
 int speed = 50;
 
+TBlobSearch blob;
+struct thread_dat *ptdat;
+
 pthread_mutex_t count_mutex; 
 
 int getBlobHAlignment()
 {
+    TBlobSearch blob;
     pthread_mutex_lock(&count_mutex);
     blob = ptdat->blob;
     pthread_mutex_unlock(&count_mutex);
     return blob.halign;
 }
 
-bool blobDetected()
+int blobDetected()
 {
+    TBlobSearch blob;
     pthread_mutex_lock(&count_mutex);
     blob = ptdat->blob;
     pthread_mutex_unlock(&count_mutex);
@@ -57,16 +62,12 @@ void *worker(void *p_thread_dat)
     const char blobColor[3] = { 255, 51, 51 };  
     TBlobSearch blob;	
 
-    TBlobSearch tempData;
-
     while (ptdat->bExit == 0) {
         blob = cameraSearchBlob( blobColor ); 
-        
-        tempData = cameraSearchBlob(blobColor);
 
         pthread_mutex_lock(&count_mutex);
 
-        ptdat->blob = tempData.blob;
+        ptdat->blob = blob;
         ptdat->blobnr++;
 
         pthread_mutex_unlock(&count_mutex);
@@ -75,7 +76,7 @@ void *worker(void *p_thread_dat)
     return NULL;
 }
 
-void userDefined(int argc, char *argv[], struct thread_dat *ptdat) 
+void userDefined(int argc, char *argv[], struct thread_dat *ptdat)
 {
 )";
     for(int x = 0; x < this->statementList.size(); x++)
@@ -104,14 +105,14 @@ int main (int argc, char *argv[])
 
     if(pthread_mutex_init(&count_mutex, NULL) != 0)
     {
-        printf(\"\n Mutex initialization failed\n\");
+        printf("\n Mutex initialization failed\n");
         return NULL;
     }
 
     // Listener loop started on seperate thread
     pthread_create(&cam_thread, NULL, worker, &tdat);
 
-    userDefined(argc, argv, &tdat);    
+    userDefined(argc, argv, &tdat);
 
     tdat.bExit = 1;               
 

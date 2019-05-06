@@ -149,6 +149,7 @@ assignment:
 |   EQUALS stringLiteral                                                        {$$ = $2;} 
 |   EQUALS charValue                                                            {$$ = $2;} 
 |   EQUALS floatingPoint                                                        {$$ = $2;} 
+|   EQUALS expression                                                           {$$ = $2;}
 ;
 
 builtInFunctionCall:
